@@ -6,6 +6,8 @@ import java.util.List;
 
 public class Shuffle implements Serializable {
 
+    private static final long serialVersionUID = 7661093817522537089L;
+
     private List<ShuffleInfo> shuffleInfoList = new ArrayList<ShuffleInfo>();
     
     private int inMemSegsNumAfterShuffle;
@@ -33,6 +35,18 @@ public class Shuffle implements Serializable {
 
     public void setInMemorySegmentsAfterShuffle(int inMemSegsNumAfterShuffle) {
 	this.inMemSegsNumAfterShuffle = inMemSegsNumAfterShuffle;	
+    }
+    
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+	
+	for(int i = 0; i < shuffleInfoList.size(); i++) {
+	    ShuffleInfo info = shuffleInfoList.get(i);
+	    sb.append("[Segment " + i + "] " + info.getCompressedLen() + ", " 
+		    + info.getStoreLoc() + ", " + info.getSourceTaskId() + "\n");
+	}
+	
+	return sb.toString();
     }
 
 }

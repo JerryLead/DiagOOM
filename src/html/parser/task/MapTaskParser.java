@@ -22,18 +22,24 @@ public class MapTaskParser {
 
 	String machine = tr.child(0).absUrl("href");
 	machine = machine.substring(7, machine.indexOf(7, ':'));
+	mapper.setMachine(machine);
 
 	String counterLink = tr.child(8).child(0).absUrl("href");
 	parseMapTaskCounters(counterLink, mapper); // set task counters
 
 	String logLink = tr.child(7).child(4).absUrl("href");
 	parseMapTaskLog(logLink, mapper); // set task log infos
-
-	String metricsLink = tr.child(0).child(0).absUrl("href") + "&text=true";
+	parseGCPrint(logLink, mapper);
 	
+	String metricsLink = tr.child(0).child(0).absUrl("href") + "&text=true";
 	parseMapTaskMetrics(metricsLink, mapper); // set task metrics
 
 	return mapper;
+    }
+
+    private static void parseGCPrint(String logLink, MapperInfo mapper) {
+	TaskGCPrintParser.parseGCPrint(logLink, mapper.getJvmUsage());
+	
     }
 
     private static void parseMapTaskCounters(String counterLink, MapperInfo mapper) {

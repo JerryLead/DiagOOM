@@ -9,6 +9,9 @@ import profile.mapper.MapperInfo;
 import profile.reducer.ReducerInfo;
 
 public class Job implements Serializable {
+   
+    private static final long serialVersionUID = 3089567988191585508L;
+
     // job name
     private String jobName;
 
@@ -29,7 +32,7 @@ public class Job implements Serializable {
 	mapperList.add(newMapper);
     }
 
-    public void addReducer(ReducerInfo newReducer) {
+    public void addReducerInfo(ReducerInfo newReducer) {
 	reducerList.add(newReducer);
     }
 

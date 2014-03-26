@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 public class InMemoryShuffleMerge implements Serializable {
 
+
+    private static final long serialVersionUID = -7901371762296157181L;
+    
     private int segmentsNum;
     private long recordsBeforeMergeAC;
     private long bytesBeforeMergeAC;
@@ -22,5 +25,31 @@ public class InMemoryShuffleMerge implements Serializable {
 	this.rawLength = rawLength;
 	this.compressedLength = compressedLength;
     }
+
+    public int getSegmentsNum() {
+        return segmentsNum;
+    }
+
+    public long getRecordsBeforeMergeAC() {
+        return recordsBeforeMergeAC;
+    }
+
+    public long getBytesBeforeMergeAC() {
+        return bytesBeforeMergeAC;
+    }
+
+    public long getRecordsAfterCombine() {
+        return recordsAfterCombine;
+    }
+
+    public long getRawLength() {
+        return rawLength;
+    }
+
+    public long getCompressedLength() {
+        return compressedLength;
+    }
+    
+    
 
 }

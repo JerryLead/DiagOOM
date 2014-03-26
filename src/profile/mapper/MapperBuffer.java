@@ -3,6 +3,9 @@ package profile.mapper;
 import java.io.Serializable;
 
 public class MapperBuffer implements Serializable {
+    
+    private static final long serialVersionUID = 9147734701929030191L;
+    
     // dataBuffer
     private long softBufferLimit;
     private long kvbufferBytes;

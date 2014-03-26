@@ -35,9 +35,7 @@ public class SingleJobProfiler {
 
     public Job profile() {
 
-	String jobdetaisUrl = linksSaver.getJobdetails_jsp();
 
-	
 	JobConfigurationParser.parseJobConf(linksSaver, job); // get the
 							      // configuration
 							      // of this job
@@ -52,7 +50,7 @@ public class SingleJobProfiler {
     }
 
     private void parseMapperTasks() {
-	
+
 	for (int i = 0; i < linksSaver.getMap_tasks_list().size(); i++) {
 	    MapperInfo newMapper = MapTaskParser.parseMapTask(linksSaver
 		    .getMap_tasks_list().get(i));
@@ -62,11 +60,11 @@ public class SingleJobProfiler {
     }
 
     private void parseReducerTasks() {
-	
+
 	for (int i = 0; i < linksSaver.getReduce_tasks_list().size(); i++) {
-	    ReducerInfo newReducer = ReduceTaskParser.parseReduceTask(linksSaver
-		    .getReduce_tasks_list().get(i));
-	    job.addReducer(newReducer);
+	    ReducerInfo newReducer = ReduceTaskParser
+		    .parseReduceTask(linksSaver.getReduce_tasks_list().get(i));
+	    job.addReducerInfo(newReducer);
 	}
     }
 
@@ -93,8 +91,9 @@ public class SingleJobProfiler {
 
     public static void main(String[] args) {
 	String jobId = "job_201210172333_0001";
-	String hostname = "master";
 	String oomTaskId = "attempt_201403211644_0007_m_000000_0";
+	
+	String hostname = "master";
 	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/PigMapJoin/";
 
 	SingleJobProfiler profiler = new SingleJobProfiler(hostname, jobId,

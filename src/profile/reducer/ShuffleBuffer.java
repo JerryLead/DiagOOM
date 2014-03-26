@@ -1,8 +1,13 @@
 package profile.reducer;
 
-public class ShuffleBuffer {
+import java.io.Serializable;
 
-    private long runtime_maxMemory;     // [---------------Runtime().maxMemory()---------------------]
+public class ShuffleBuffer implements Serializable {
+
+
+    private static final long serialVersionUID = -1309096120528545918L;
+    
+    // private long runtime_maxMemory;     // [---------------Runtime().maxMemory()---------------------]
     private long shuffleBound; 	        // [-------------- ShuffleBound --------------][--for other--]
     private long maxSingleRecordBytes;  //
 
@@ -13,7 +18,7 @@ public class ShuffleBuffer {
 	this.maxSingleRecordBytes = maxSingleRecordBytes;
     }
     
-    public float bytesToMB(long bytes) {
-	return (float) ((double) bytes / 1024 / 1024);
+    public String toString() {
+	return "[ShuffleBound] " + shuffleBound / 1024 / 1024;
     }
 }

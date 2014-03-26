@@ -2,7 +2,6 @@ package profile.commons.configuration;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -11,8 +10,12 @@ import java.util.Set;
 public class Configuration implements Serializable {
 	
 	private static final long serialVersionUID = -3840797925044516113L;
+	
+	
+	/*
 	private static Set<String> mapperConfs = new HashSet<String>();
 	private static Set<String> reducerConfs = new HashSet<String>();
+	
 	
 	static {
 		mapperConfs.add("io.sort.mb");
@@ -37,6 +40,7 @@ public class Configuration implements Serializable {
 		//reducerConfs.add("dfs.replication");
 		//reducerConfs.add("mapreduce.combine.class");
 	}
+	*/
 	
 	private Map<String, String> confMap = new HashMap<String, String>();
 

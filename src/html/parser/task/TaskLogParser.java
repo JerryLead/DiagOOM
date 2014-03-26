@@ -7,7 +7,6 @@ import org.jsoup.nodes.Element;
 
 import profile.mapper.MapperInfo;
 import profile.reducer.ReducerInfo;
-import html.util.DateParser;
 import html.util.HtmlFetcher;
 
 public class TaskLogParser {
@@ -19,6 +18,13 @@ public class TaskLogParser {
 	String syslog[] = syslogPre.text().split("\\n");
 
 	int i;
+	
+	for (i = 0; i < syslog.length; i++) {
+	    if (syslog[i].contains("[HeapDump]")) {
+		String heapdump = syslog[i].substring(syslog[i].lastIndexOf(' ') + 1);
+		mapper.addHeapDump(heapdump);
+	    }
+	}
 
 	for (i = 0; i < syslog.length; i++) {
 	    /*
@@ -26,8 +32,12 @@ public class TaskLogParser {
 	     * Integer.parseInt(syslog[i].substring(syslog[i].lastIndexOf('=') +
 	     * 2)); // 500 mapper.getBuffer().setIoSortMB(ioSortMb); }
 	     */
+	    if (syslog[i].contains("Processing split")) {
+		String splitBytes = syslog[i].substring(syslog[i].lastIndexOf(':') + 2);
+		mapper.getInput().setSplitBytes(Long.parseLong(splitBytes));
+	    }
 
-	    if (syslog[i].contains("data buffer")) {
+	    else if (syslog[i].contains("data buffer")) {
 		String[] dataBuffer = syslog[i].substring(
 			syslog[i].lastIndexOf('=') + 2).split("/");
 
@@ -36,7 +46,7 @@ public class TaskLogParser {
 
 		mapper.getBuffer().setDataBuffer(softBufferLimit, kvbufferBytes);
 		
-		System.out.println("softBufferLimit, kvbufferBytes = " + softBufferLimit + ", " + kvbufferBytes);
+		
 	    }
 
 	    else if (syslog[i].contains("record buffer")) {
@@ -49,12 +59,20 @@ public class TaskLogParser {
 		mapper.getBuffer().setRecordBuffer(softRecordLimit,
 			kvoffsetsLen);
 		
-		System.out.println("softRecordLimit, kvoffsetsLen = " + softRecordLimit + ", " + kvoffsetsLen);
 		i++;
 		break;
 	    }
+	    
+
+	    else if (syslog[i].contains("[map() begins]")) {
+		break;
+	    }
+	    
+	   
 	}
 
+	
+	
 	String reason = "";
 	int spillid = -1;
 
@@ -64,7 +82,6 @@ public class TaskLogParser {
 		mapper.setRunningPhase("map");
 		mapper.setIsMapRunning(true);
 		
-		System.out.println(syslog[i]);
 	    }
 
 	    else if (syslog[i].contains("Spilling map output")) {
@@ -75,13 +92,13 @@ public class TaskLogParser {
 		++spillid;
 
 		mapper.setRunningPhase("spill");
-		System.out.println(syslog[i]);
+		
 	    }
 
 	    else if (syslog[i].contains("Starting flush of map output")) {
 		reason = "flush";
 		++spillid;
-		System.out.println(syslog[i]);
+		
 	    }
 
 	    else if (syslog[i].contains("Finished spill")) {
@@ -108,10 +125,6 @@ public class TaskLogParser {
 		    mapper.getSpill().addSpillItem(false, reason, Records,
 			    BytesBeforeSpill, Records, RawLength,
 			    CompressedLength);
-		    System.out.println("false, reason, Records, BytesBeforeSpill, Records, RawLength, CompressedLength = " + 
-			    false + ", " + reason + ", " + Records + ", " + 
-			    BytesBeforeSpill + ", " + Records + ", " + RawLength + ", " + 
-			    CompressedLength);
 		    
 
 		} else {
@@ -133,10 +146,7 @@ public class TaskLogParser {
 			    RecordsBeforeCombine, BytesBeforeSpill,
 			    RecordAfterCombine, RawLength, CompressedLength);
 		    
-		    System.out.println("true, reason, RecordsBeforeCombine, BytesBeforeSpill, RecordAfterCombine, RawLength, CompressedLength = "
-			    + true + ", " + reason+ ", " + 
-			    RecordsBeforeCombine+ ", " + BytesBeforeSpill+ ", " + 
-			    RecordAfterCombine+ ", " + RawLength+ ", " + CompressedLength);
+		  
 		}
 	    }
 
@@ -168,22 +178,18 @@ public class TaskLogParser {
 			RecordsBeforeCombine, RecordsAfterCombine, RawLength,
 			CompressedLength);
 		
-		System.out.println(syslog[i]);
 
 	    }
 
 	    else if (syslog[i].contains("[BeforeMerge]")) {
 		mapper.setRunningPhase("merge");
-		
-		
+
 		break;
 	    }
 
-	    else if (syslog[i]
-		    .contains("done. And is in the process of commiting")) {
+	    else if (syslog[i].contains("done. And is in the process of commiting")) {
 		mapper.setRunningPhase("over");
-		
-		
+			
 		break;
 	    }
 	} // end for (; i < syslog.length; i++)
@@ -208,8 +214,6 @@ public class TaskLogParser {
 		// ", CompressedLength = " + CompressedLength);
 		mapper.getMerge().addBeforeMergeItem(partitionIdStart,
 			SegmentsNum, RawLength, CompressedLength);
-
-		System.out.println(syslog[i]);
 		
 		for (int j = i + 1; j < syslog.length; j++) {
 		    if (syslog[j].contains("AfterMergeAndCombine")) {
@@ -239,18 +243,16 @@ public class TaskLogParser {
 			// + ", CompressedLength = " + CompressedLengthEnd);
 			// System.out.println();
 			
-			System.out.println(syslog[j]);
+			
 			i = j;
 			break;
 		    }
 		}
 	    }
 
-	    else if (syslog[i]
-		    .contains("done. And is in the process of commiting")) {
+	    else if (syslog[i].contains("done. And is in the process of commiting")) {
 		mapper.setRunningPhase("over");
 		
-		System.out.println(syslog[i]);
 		break;
 	    }
 	}
@@ -263,6 +265,14 @@ public class TaskLogParser {
 	String syslog[] = syslogPre.text().split("\\n");
 
 	int i;
+	
+	for (i = 0; i < syslog.length; i++) {
+	    if (syslog[i].contains("[HeapDump]")) {
+		String heapdump = syslog[i].substring(syslog[i].lastIndexOf(' ') + 1);
+		reducer.addHeapDump(heapdump);
+	    }
+	}
+	
 	for (i = 0; i < syslog.length; i++) {
 	    if (syslog[i].contains("ShuffleRamManager:")) { // ShuffleRamManager:
 							    // MemoryLimit=652482944,
@@ -284,7 +294,6 @@ public class TaskLogParser {
 		
 		reducer.setRunningPhase("shuffle");
 		
-		// System.out.println(syslog[i]);
 		i++;
 		break;
 	    }
@@ -324,7 +333,6 @@ public class TaskLogParser {
 	    else if (syslog[i].contains("[InMemoryShuffleMerge begins]")) {
 
 		reducer.setInMemMergeRunning(true);
-		// System.out.println(syslog[i]);
 
 	    }
 
@@ -345,7 +353,6 @@ public class TaskLogParser {
 			SegmentsNum, RecordsBeforeMergeAC,
 			BytesBeforeMergeAC, RecordsAfterCombine, RawLength,
 			CompressedLength);
-		// System.out.println(syslog[i]);
 		reducer.setInMemMergeRunning(false);
 
 	    }
@@ -358,7 +365,6 @@ public class TaskLogParser {
 		reducer.getShuffle().setOnDiskSegmentsAfterShuffle(
 			mapOutputFilesOnDisk);
 		
-		// System.out.println(syslog[i]);
 		
 	    }
 	    
@@ -370,7 +376,6 @@ public class TaskLogParser {
 		
 		reducer.getShuffle().setInMemorySegmentsAfterShuffle(mapOutputsFilesInMemory);
 
-		// System.out.println(syslog[i]);
 		reducer.setRunningPhase("sort");
 		i++;
 		break;
@@ -423,7 +428,6 @@ public class TaskLogParser {
 		reducer.getSort().setInMemorySortMerge(
 			SegmentsNum, Records,
 			BytesBeforeMerge, RawLength, CompressedLength);
-		// System.out.println(syslog[i]);
 		reducer.setRunningPhase("InMemorySortMerge");
 	    }
 
@@ -445,7 +449,6 @@ public class TaskLogParser {
 			InMemorySegmentsNum, InMemorySegmentsSize,
 			OnDiskSegmentsNum, OnDiskSegmentsSize);
 		
-		// System.out.println(syslog[i]);
 		reducer.setRunningPhase("MixSortMerge");
 		
 	    }
@@ -463,7 +466,6 @@ public class TaskLogParser {
 			InMemorySegmentsNum,
 			inMemBytes);
 		
-		// System.out.println(syslog[i]);
 		reducer.setRunningPhase("FinalSortMerge");
 	    }
 	    
@@ -475,7 +477,6 @@ public class TaskLogParser {
 	    }
 
 	    else if (syslog[i].contains("is allowed to commit now")) {
-		// System.out.println("[reduce() ends]");
 		reducer.setRunningPhase("over");
 	    }
 	}
@@ -493,8 +494,10 @@ public class TaskLogParser {
     }
 
     public static void main(String[] args) {
-	parseMapperLog("http://slave7:50060/tasklog?attemptid=attempt_201403211644_0007_m_000000_0&all=true",
-		new MapperInfo());
+	MapperInfo mapperInfo = new MapperInfo();
+	parseMapperLog("http://slave3:50060/tasklog?attemptid=attempt_201403261726_0001_m_000000_0&all=true",
+		mapperInfo);
+	System.out.println(mapperInfo);
 
 	/*
 	parseReducerLog(

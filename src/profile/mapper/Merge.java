@@ -6,6 +6,9 @@ import java.util.List;
 
 public class Merge implements Serializable {
 
+
+    private static final long serialVersionUID = 3128954196895626833L;
+    
     private List<MergeInfo> mergeInfoList = new ArrayList<MergeInfo>();
 
     public void addBeforeMergeItem(
@@ -30,5 +33,18 @@ public class Merge implements Serializable {
 	mergeInfo.setAfterMergeItem(recordsBeforeMerge, recordsAfterMerge,
 		rawLengthEnd, compressedLengthEnd);
 
+    }
+    
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+	
+	for(int i = 0; i < mergeInfoList.size(); i++) {
+	    MergeInfo info = mergeInfoList.get(i);
+	    sb.append("[Segment " + i + "] " + "records = " + info.getRecordsBeforeMerge() + " | " 
+		    + info.getRecordsAfterMerge() + ", bytes = " + info.getRawLengthBeforeMerge()
+		    + " | " + info.getRawLengthAfterMerge() + "\n");
+	}
+	
+	return sb.toString();
     }
 }
