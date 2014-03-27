@@ -3,6 +3,9 @@ package profile.commons.metrics;
 import java.io.Serializable;
 
 public class JstatItem implements Serializable {
+
+    private static final long serialVersionUID = 8596215137334183198L;
+
     // All values are changed into MB
     private long timestampMS;
 

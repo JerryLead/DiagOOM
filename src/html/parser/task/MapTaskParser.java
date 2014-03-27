@@ -20,8 +20,9 @@ public class MapTaskParser {
 	String taskId = tr.child(0).text();
 	mapper.setTaskId(taskId); // set TaskId
 
-	String machine = tr.child(0).absUrl("href");
-	machine = machine.substring(7, machine.indexOf(7, ':'));
+	String machine = tr.child(0).child(0).absUrl("href");
+	
+	machine = machine.substring(7, machine.indexOf(':', 7));
 	mapper.setMachine(machine);
 
 	String counterLink = tr.child(8).child(0).absUrl("href");

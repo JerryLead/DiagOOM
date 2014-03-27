@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class MergeInfo implements Serializable {
 
+    private static final long serialVersionUID = -3073508117026105230L;
+    
     private int partitionId;
     private int segmentsNum;
 

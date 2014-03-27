@@ -9,6 +9,7 @@ import profile.commons.metrics.JvmUsage;
 
 public class ReducerInfo implements Serializable {
 
+    private static final long serialVersionUID = 6968486195395022301L;
     // basic infos
     private String taskId;
     private String machine;

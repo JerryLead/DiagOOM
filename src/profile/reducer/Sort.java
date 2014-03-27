@@ -3,8 +3,8 @@ package profile.reducer;
 import java.io.Serializable;
 
 public class Sort implements Serializable {
-    private int inMemSegsAfterShuffle;
-    private int onDiskSegsAfterShuffle;
+  
+    private static final long serialVersionUID = -2666953270300858669L;
 
     private InMemorySortMerge inMemorySortMerge; // Segments in [ShuffleBound - ReduceBuffer] ==> onDiskSeg
     						 // if(count(onDiskSegs) < io.sort.factor)
@@ -38,5 +38,35 @@ public class Sort implements Serializable {
 	mixSortMerge = new MixSortMerge(inMemSegsNum, inMemSegsBytes, onDiskSegsNum, onDiskSegsBytes);
     }
 
+    public InMemorySortMerge getInMemorySortMerge() {
+        return inMemorySortMerge;
+    }
 
+    public MixSortMerge getMixSortMerge() {
+        return mixSortMerge;
+    }
+
+    public FinalSortMerge getFinalSortMerge() {
+        return finalSortMerge;
+    }
+
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+	
+	if(inMemorySortMerge != null)
+	    sb.append("[InMemSortMerge] " + "num = " + inMemorySortMerge.getSegmentsNum()
+		    + ", records = " + inMemorySortMerge.getRecords() + ", bytes = " 
+		    + inMemorySortMerge.getBytesBeforeMerge() + " | " + inMemorySortMerge.getRawLength() + "\n");
+	
+	if(mixSortMerge != null)
+	    sb.append("[MixSortMerge] " + "InMemSegsNum = " + mixSortMerge.getInMemSegsNum() + ", InMemSegsBytes = "
+		    + mixSortMerge.getInMemSegsBytes() + " OnDiskSegsNum = " + mixSortMerge.getOnDiskSegsNum()
+		    + ", " + mixSortMerge.getOnDiskSegsBytes() + "\n");
+	
+	if(finalSortMerge != null)
+	    sb.append("[FinalSortMerge] " + "InMemSegsNum = " + finalSortMerge.getInMemSegsNum() + ", InMemSegsBytes = " 
+		    + finalSortMerge.getInMemSegsBytes() + "\n");
+	return sb.toString();
+    }
+    
 }

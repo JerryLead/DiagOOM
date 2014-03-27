@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 public class FinalSortMerge implements Serializable {
 
+
+    private static final long serialVersionUID = 946752656921672107L;
+    
     private int inMemSegsNum;
     private long inMemSegsBytes;
 
@@ -13,4 +16,12 @@ public class FinalSortMerge implements Serializable {
 	this.inMemSegsBytes = inMemSegsBytes;
     }
 
+    public int getInMemSegsNum() {
+        return inMemSegsNum;
+    }
+
+    public long getInMemSegsBytes() {
+        return inMemSegsBytes;
+    }
+    
 }

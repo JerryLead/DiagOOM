@@ -1,8 +1,10 @@
 package profile.commons.metrics;
 
-public class FullGCItem {
-    
-  
+import java.io.Serializable;
+
+public class FullGCItem implements Serializable {
+
+    private static final long serialVersionUID = 2662626133102893826L;
     // All are MB
     // 169.606: [Full GC [PSYoungGen: 128K->0K(478720K)] [PSOldGen: 22776K->22834K(1024000K)] 
     // 22904K->22834K(1502720K) [PSPermGen: 14920K->14920K(33856K)], 0.0247090 secs] 

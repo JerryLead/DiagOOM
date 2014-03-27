@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class SpillInfo implements Serializable {
 
+    private static final long serialVersionUID = 5204546233874035223L;
+    
     private boolean hasCombine;
     private String reason; // record, buffer, flush
 

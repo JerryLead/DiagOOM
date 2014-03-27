@@ -82,7 +82,7 @@ public class TaskGCPrintParser {
    		bound = extractHeapBound(syslog[i]);
    		
    		
-   		jvmUsage.addHeapUsage("end", total, used, bound);
+   		jvmUsage.addHeapUsage("eden", total, used, bound);
    		
    		// from
    		i++;
@@ -135,13 +135,17 @@ public class TaskGCPrintParser {
 	
 	long[] bound = new long[3];
 	int loc = line.indexOf('[') + 1;
-	bound[0] = Long.parseLong(line.substring(loc, line.indexOf(',')), 16);
+
+	
+	bound[0] = Long.parseLong(line.substring(loc + 2, line.indexOf(',', loc)), 16);
 		
-	loc = line.indexOf(',') + 2;
-	bound[1] = Long.parseLong(line.substring(loc, line.lastIndexOf(',')), 16);
+	loc = line.indexOf(',', loc) + 2;
+	bound[1] = Long.parseLong(line.substring(loc + 2, line.indexOf(',', loc)), 16);
+	
 		
 	loc = line.lastIndexOf(',') + 2;
-	bound[2] = Long.parseLong(line.substring(loc, line.lastIndexOf(')')), 16);
+	bound[2] = Long.parseLong(line.substring(loc + 2, line.lastIndexOf(')')), 16);
+	
 	
 	return bound;
     }

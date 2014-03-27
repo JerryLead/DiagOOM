@@ -1,12 +1,15 @@
 package profile.mapper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import profile.commons.metrics.JvmUsage;
 
-public class MapperInfo {
+public class MapperInfo implements Serializable {
 
+    private static final long serialVersionUID = 1719440286067648190L;
+    
     private String taskId;
     private String machine;
     private boolean isMapRunning;

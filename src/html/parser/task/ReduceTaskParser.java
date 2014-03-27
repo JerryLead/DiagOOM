@@ -4,6 +4,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import profile.mapper.MapperInfo;
 import profile.reducer.ReducerInfo;
 import html.util.HtmlFetcher;
 
@@ -34,7 +35,8 @@ public class ReduceTaskParser {
 
 	String logLink = tr.child(9).child(4).absUrl("href");
 	parseReduceTaskLog(logLink, reducer);
-
+	parseGCPrint(logLink, reducer);
+	
 	String metricsLink = tr.child(0).child(0).absUrl("href") + "&text=true";
 	
 	parseReduceTaskMetrics(metricsLink, reducer);
@@ -42,6 +44,10 @@ public class ReduceTaskParser {
 	return reducer;
     }
 
+    private static void parseGCPrint(String logLink, ReducerInfo reducer) {
+   	TaskGCPrintParser.parseGCPrint(logLink, reducer.getJvmUsage());
+    }
+    
     private static void parseReduceTaskCounters(String countersLink,
 	    ReducerInfo reducer) {
 	Document countersDoc = HtmlFetcher.getHtml(countersLink);

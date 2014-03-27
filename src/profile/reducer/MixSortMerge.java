@@ -9,14 +9,13 @@ import java.io.Serializable;
  */
 public class MixSortMerge implements Serializable {
 
+    private static final long serialVersionUID = -2803969838577137062L;
+    
     private int inMemSegsNum;
     private long inMemSegsBytes;
     private long onDiskSegsNum;
     private long onDiskSegsBytes;
 
-    // used in SortModel
-    private long inMemoryRecords;
-    private long onDiskRecords;
 
     public MixSortMerge(int inMemSegsNum, long inMemSegsBytes,
 	    int onDiskSegsNum, long onDiskSegsBytes) {
@@ -27,4 +26,24 @@ public class MixSortMerge implements Serializable {
 	this.onDiskSegsBytes = onDiskSegsBytes;
     }
 
+
+    public int getInMemSegsNum() {
+        return inMemSegsNum;
+    }
+
+
+    public long getInMemSegsBytes() {
+        return inMemSegsBytes;
+    }
+
+
+    public long getOnDiskSegsNum() {
+        return onDiskSegsNum;
+    }
+
+
+    public long getOnDiskSegsBytes() {
+        return onDiskSegsBytes;
+    }
+    
 }
