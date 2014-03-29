@@ -60,8 +60,8 @@ public class Sort implements Serializable {
 	
 	if(mixSortMerge != null)
 	    sb.append("[MixSortMerge] " + "InMemSegsNum = " + mixSortMerge.getInMemSegsNum() + ", InMemSegsBytes = "
-		    + mixSortMerge.getInMemSegsBytes() + " OnDiskSegsNum = " + mixSortMerge.getOnDiskSegsNum()
-		    + ", " + mixSortMerge.getOnDiskSegsBytes() + "\n");
+		    + mixSortMerge.getInMemSegsBytes() + ", OnDiskSegsNum = " + mixSortMerge.getOnDiskSegsNum()
+		    + ", OnDiskSegsBytes = " + mixSortMerge.getOnDiskSegsBytes() + "\n");
 	
 	if(finalSortMerge != null)
 	    sb.append("[FinalSortMerge] " + "InMemSegsNum = " + finalSortMerge.getInMemSegsNum() + ", InMemSegsBytes = " 

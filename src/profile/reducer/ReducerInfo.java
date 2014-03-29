@@ -92,7 +92,7 @@ public class ReducerInfo implements Serializable {
   	sb.append("------------ RunningStatus ------------\n");
   	sb.append("[taskId] " + machine + "/" + taskId + "\n");
   	sb.append("[RunningPhase] " + runningPhase + "\n");
-  	sb.append("[isInMemMergeRunning] " + isInMemMergeRunning + "\n");
+  	sb.append("[isInMemMergeRunning] " + isInMemMergeRunning + "\n\n");
   	
   	sb.append("------------ ShuffleBuffer ------------\n");
   	sb.append(buffer + "\n");

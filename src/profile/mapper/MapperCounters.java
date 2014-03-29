@@ -7,19 +7,19 @@ public class MapperCounters implements Serializable {
 
     private static final long serialVersionUID = -6361969676093056214L;
     
-    private long file_bytes_read; // FILE_BYTES_READ
-    private long hdfs_bytes_read; // HDFS_BYTES_READ
-    private long file_bytes_written; // FILE_BYTES_WRITTEN
+    private long file_bytes_read = -1; // FILE_BYTES_READ
+    private long hdfs_bytes_read = -1; // HDFS_BYTES_READ
+    private long file_bytes_written = -1; // FILE_BYTES_WRITTEN
 
-    private long map_input_records; // Map input records
-    private long map_output_records; // Map output records
-    private long map_output_bytes; // Map output bytes
+    private long map_input_records = -1; // Map input records
+    private long map_output_records = -1; // Map output records
+    private long map_output_bytes = -1; // Map output bytes
 
-    private long combine_input_records; // Combine input records
-    private long combine_output_records; // Combine output records
+    private long combine_input_records = -1; // Combine input records
+    private long combine_output_records = -1; // Combine output records
 
-    private long physical_memory_bytes; // Physical memory (bytes) snapshot
-    private long total_committed_bytes; // Total committed heap usage (bytes)
+    private long physical_memory_bytes = -1; // Physical memory (bytes) snapshot
+    private long total_committed_bytes = -1; // Total committed heap usage (bytes)
     
 
     public void setCounter(String name, long value) {
@@ -36,6 +36,7 @@ public class MapperCounters implements Serializable {
 	    file_bytes_written = value;
 	    break;
 
+	    
 	case "Map input records":
 	    map_input_records = value;
 	    break;
@@ -44,6 +45,11 @@ public class MapperCounters implements Serializable {
 	    map_output_records = value;
 	    break;
 	    
+	case "Map output bytes":
+	    map_output_bytes = value;
+	    break;  
+	    
+	    
 	case "Combine input records":
 	    combine_input_records = value;
 	    break;
@@ -51,6 +57,7 @@ public class MapperCounters implements Serializable {
 	case "Combine output records":
 	    combine_output_records = value;
 	    break;
+	    
 
 	case "Physical memory (bytes) snapshot":
 	    physical_memory_bytes = value;
@@ -122,11 +129,14 @@ public class MapperCounters implements Serializable {
 	
 	sb.append("[FILE_BYTES_READ]    " + file_bytes_read + "\n");
 	sb.append("[HDFS_BYTES_READ]    " + hdfs_bytes_read + "\n");
-	sb.append("[FILE_BYTES_WRITTEN] " + file_bytes_written + "\n");
+	sb.append("[FILE_BYTES_WRITTEN] " + file_bytes_written + "\n\n");
 	
 	sb.append("[Map input records]  " + map_input_records + "\n");
 	sb.append("[Map output records] " + map_output_records + "\n");
-	sb.append("[Map output bytes]   " + map_output_bytes + "\n");
+	sb.append("[Map output bytes]   " + map_output_bytes + "\n\n");
+
+	sb.append("[Combine input records]  " + combine_input_records + "\n");
+	sb.append("[Combine output records] " + combine_output_records + "\n");
 	
 	return sb.toString();
     }

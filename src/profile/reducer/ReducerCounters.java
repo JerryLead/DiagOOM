@@ -6,20 +6,20 @@ public class ReducerCounters implements Serializable {
 
     private static final long serialVersionUID = 6848051201439325174L;
 
-    private long file_bytes_read; // FILE_BYTES_READ
-    private long hdfs_bytes_written; // HDFS_BYTES_WRITTEN
-    private long file_bytes_written; // FILE_BYTES_WRITTEN
+    private long file_bytes_read = -1; // FILE_BYTES_READ
+    private long hdfs_bytes_written = -1; // HDFS_BYTES_WRITTEN
+    private long file_bytes_written = -1; // FILE_BYTES_WRITTEN
 
-    private long reduce_shuffle_bytes; // Reduce shuffle bytes
-    private long reduce_input_groups; // Reduce input groups
-    private long reduce_input_records; // Reduce input records
-    private long reduce_output_records; // Reduce output records
+    private long reduce_shuffle_bytes = -1; // Reduce shuffle bytes
+    private long reduce_input_groups = -1; // Reduce input groups
+    private long reduce_input_records = -1; // Reduce input records
+    private long reduce_output_records = -1; // Reduce output records
 
-    private long combine_input_records; // Combine input records
-    private long combine_output_records; // Combine output records
+    private long combine_input_records = -1; // Combine input records
+    private long combine_output_records = -1; // Combine output records
 
-    private long physical_memory_bytes; // Physical memory (bytes) snapshot
-    private long total_committed_bytes; // Total committed heap usage (bytes)
+    private long physical_memory_bytes = -1; // Physical memory (bytes) snapshot
+    private long total_committed_bytes = -1; // Total committed heap usage (bytes)
 
     public void setCounter(String name, long value) {
 	switch (name) {
@@ -123,11 +123,11 @@ public class ReducerCounters implements Serializable {
 
 	sb.append("[FILE_BYTES_READ]        " + file_bytes_read + "\n");
 	sb.append("[HDFS_BYTES_WRITTEN]     " + hdfs_bytes_written + "\n");
-	sb.append("[FILE_BYTES_WRITTEN]     " + file_bytes_written + "\n");
+	sb.append("[FILE_BYTES_WRITTEN]     " + file_bytes_written + "\n\n");
 
 	sb.append("[Reduce shuffle bytes]   " + reduce_shuffle_bytes + "\n");
 	sb.append("[Reduce input groups]    " + reduce_input_groups + "\n");
-	sb.append("[Reduce input records]   " + reduce_input_records + "\n");
+	sb.append("[Reduce input records]   " + reduce_input_records + "\n\n");
 	
 	sb.append("[Reduce output records]  " + reduce_output_records + "\n");
 	sb.append("[Combine input records]  " + combine_input_records + "\n");

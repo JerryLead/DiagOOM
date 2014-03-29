@@ -42,4 +42,10 @@ public class MapperBuffer implements Serializable {
 	return kvoffsetsLen;
     }
 
+    public String toString() {
+	
+	return "kvbuffer = " + softBufferLimit + " | " + kvbufferBytes + ", "
+		+ "kvoffsets = " + softRecordLimit + " | " + kvoffsetsLen + "\n";
+	
+    }
 }

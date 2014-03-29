@@ -19,6 +19,6 @@ public class Input implements Serializable {
     
     public String toString() {
 	DecimalFormat format = new DecimalFormat(",###");
-	return "[InputSplit] " + format.format(splitBytes) + "B";
+	return "[InputSplit] " + format.format(splitBytes) + " B\n";
     }
 }

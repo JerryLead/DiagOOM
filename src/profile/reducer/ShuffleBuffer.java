@@ -19,6 +19,6 @@ public class ShuffleBuffer implements Serializable {
     }
     
     public String toString() {
-	return "[ShuffleBound] " + shuffleBound / 1024 / 1024;
+	return "[ShuffleBound] " + shuffleBound / 1024 / 1024 + " MB\n";
     }
 }

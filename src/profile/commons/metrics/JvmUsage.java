@@ -100,12 +100,13 @@ public class JvmUsage implements Serializable {
 
     public String toString() {
 	StringBuilder sb = new StringBuilder();
-	    
-	sb.append("[NewGen] " + (int)newGen.getUsed() + ", " + (int)newGen.getCommitted() + ", " + (int)newGen.getTotal() + "\n");
-	sb.append("[eden] " + (int)eden.getUsed() + ", " + (int)eden.getCommitted() + ", " + (int)eden.getTotal() + "\n");
-	sb.append("[from] " + (int)from.getUsed() + ", " + (int)from.getCommitted() + ", " + (int)from.getTotal() + "\n");
-	sb.append("[to] " + (int)to.getUsed() + ", " + (int)to.getCommitted() + ", " + (int)to.getTotal() + "\n");
-	sb.append("[OldGen] " + (int)oldGen.getUsed() + ", " + (int)oldGen.getCommitted() + ", " + (int)oldGen.getTotal() + "\n");
+	
+	sb.append("[Space] Used | Committed | Total\n");
+	sb.append("[NewGen] " + (int)newGen.getUsed() + " | " + (int)newGen.getCommitted() + " | " + (int)newGen.getTotal() + "\n");
+	sb.append("[eden] " + (int)eden.getUsed() + " | " + (int)eden.getCommitted() + " | " + (int)eden.getTotal() + "\n");
+	sb.append("[from] " + (int)from.getUsed() + " | " + (int)from.getCommitted() + " | " + (int)from.getTotal() + "\n");
+	sb.append("[to] " + (int)to.getUsed() + " | " + (int)to.getCommitted() + " | " + (int)to.getTotal() + "\n");
+	sb.append("[OldGen] " + (int)oldGen.getUsed() + " | " + (int)oldGen.getCommitted() + " | " + (int)oldGen.getTotal() + "\n");
 	
 	return sb.toString();
     }

@@ -47,7 +47,7 @@ public class MapperInfo implements Serializable {
 	sb.append("------------ RunningStatus ------------\n");
 	sb.append("[taskId] " + machine + "/" + taskId + "\n");
 	sb.append("[RunningPhase] " + runningPhase + "\n");
-	sb.append("[is map() running] " + isMapRunning + "\n");
+	sb.append("[is map() running] " + isMapRunning + "\n\n");
 	
 	sb.append("------------ InputSplit ------------\n");
 	sb.append(input + "\n");
@@ -56,9 +56,9 @@ public class MapperInfo implements Serializable {
 	sb.append(buffer + "\n");
 	
 	if(spill.getHasCombine())
-	    sb.append("----- Spills without combine -----\n");
+	    sb.append("----- Spills combine -----\n");
 	else
-	    sb.append("----- Spills with combine --------\n");
+	    sb.append("----- Spills without combine --------\n");
 	sb.append(spill + "\n");
 	
 	sb.append("------------ Merge ------------\n");

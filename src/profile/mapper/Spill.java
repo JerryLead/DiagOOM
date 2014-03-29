@@ -35,7 +35,7 @@ public class Spill implements Serializable {
 	    SpillInfo info = spillInfoList.get(i);
 	    sb.append("[Spill " + i + "] " + "records = " + info.getRecordsBeforeCombine() + " | " 
 		    + info.getRecordsAfterCombine() + ", bytes = " + info.getBytesBeforeSpill()
-		    + ", " + info.getRawLength() + "\n");
+		    + " | " + info.getRawLength() + "\n");
 	}
 	
 	return sb.toString();
