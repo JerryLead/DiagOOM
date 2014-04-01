@@ -13,22 +13,21 @@ public class MergeInfo implements Serializable {
     private long rawLengthBeforeMerge;
     private long compressedLengthBeforeMerge;
 
-    private long recordsAfterMerge;
-    private long rawLengthAfterMerge;
-    private long compressedLengthAfterMerge;
+    private long recordsAfterMerge = -1;
+    private long rawLengthAfterMerge = -1;
+    private long compressedLengthAfterMerge = -1;
 
-    public MergeInfo(int partitionId, int segmentsNum,
+    public MergeInfo(int partitionId, int segmentsNum, long records,
 	    long rawLengthBeforeMerge, long compressedLengthBeforeMerge) {
 	this.partitionId = partitionId;
 	this.segmentsNum = segmentsNum;
+	this.recordsBeforeMerge = records;
 	this.rawLengthBeforeMerge = rawLengthBeforeMerge;
 	this.compressedLengthBeforeMerge = compressedLengthBeforeMerge;
     }
 
-    public void setAfterMergeItem(long recordsBeforeMerge,
-	    long recordsAfterMerge, long rawLengthEnd, long compressedLengthEnd) {
+    public void setAfterMergeItem(long recordsAfterMerge, long rawLengthEnd, long compressedLengthEnd) {
 
-	this.recordsBeforeMerge = recordsBeforeMerge;
 	this.recordsAfterMerge = recordsAfterMerge;
 	this.rawLengthAfterMerge = rawLengthEnd;
 	this.compressedLengthAfterMerge = compressedLengthEnd;

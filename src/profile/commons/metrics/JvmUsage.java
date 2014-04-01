@@ -99,6 +99,8 @@ public class JvmUsage implements Serializable {
     }
 
     public String toString() {
+	if(newGen == null)
+	    return "";
 	StringBuilder sb = new StringBuilder();
 	
 	sb.append("[Space] Used | Committed | Total\n");

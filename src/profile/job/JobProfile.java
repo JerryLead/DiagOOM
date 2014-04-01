@@ -8,8 +8,8 @@ import profile.commons.configuration.Configuration;
 import profile.mapper.MapperInfo;
 import profile.reducer.ReducerInfo;
 
-public class Job implements Serializable {
-   
+public class JobProfile implements Serializable {
+
     private static final long serialVersionUID = 3089567988191585508L;
 
     // job name

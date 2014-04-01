@@ -74,31 +74,34 @@ public class TaskLogParser {
 	
 	
 	String reason = "";
-	int spillid = -1;
+	int spillid = 0;
 
 	for (; i < syslog.length; i++) {
 
 	    if (syslog[i].contains("[map() begins]")) {
 		mapper.setRunningPhase("map");
 		mapper.setIsMapRunning(true);
-		
 	    }
 
 	    else if (syslog[i].contains("Spilling map output")) {
-		reason = "record";
-		if (syslog[i].contains("buffer"))
-		    reason = "buffer";
-
-		++spillid;
-
+		int loc = syslog[i].indexOf('=') + 2;
+		reason = syslog[i].substring(loc, syslog[i].indexOf(',', loc));
+		long[] numbers = extractLongNumber(syslog[i].substring(loc), 2);
+		
+		mapper.getSpill().addBeforeSpillItem(reason, numbers[0], numbers[1]);
+		
 		mapper.setRunningPhase("spill");
+	
 		
 	    }
 
 	    else if (syslog[i].contains("Starting flush of map output")) {
 		reason = "flush";
-		++spillid;
+		long[] numbers = extractLongNumber(syslog[i], 2);
 		
+		mapper.getSpill().addBeforeSpillItem(reason, numbers[0], numbers[1]);
+	
+		mapper.setRunningPhase("spill");
 	    }
 
 	    else if (syslog[i].contains("Finished spill")) {
@@ -122,8 +125,7 @@ public class TaskLogParser {
 		    // + ", RawLength = " + RawLength + ", CompressedLength = "
 		    // + CompressedLength);
 
-		    mapper.getSpill().addSpillItem(false, reason, Records,
-			    BytesBeforeSpill, Records, RawLength,
+		    mapper.getSpill().addAfterSpillItem(spillid, false, Records, RawLength,
 			    CompressedLength);
 		    
 
@@ -142,12 +144,12 @@ public class TaskLogParser {
 		    // RecordAfterCombine + ", RawLength = " + RawLength
 		    // + ", CompressedLength = " + CompressedLength);
 		    // System.out.println();
-		    mapper.getSpill().addSpillItem(true, reason,
-			    RecordsBeforeCombine, BytesBeforeSpill,
-			    RecordAfterCombine, RawLength, CompressedLength);
+		    mapper.getSpill().addAfterSpillItem(spillid, true, RecordAfterCombine, RawLength, CompressedLength);
 		    
 		  
 		}
+		
+		++spillid;
 	    }
 
 	    else if (syslog[i].contains("[map() ends]")) {
@@ -172,10 +174,10 @@ public class TaskLogParser {
 		long RawLength = values[3];
 		long CompressedLength = values[4];
 
-		mapper.getMerge().addBeforeMergeItem(partitionId, 1,
+		mapper.getMerge().addBeforeMergeItem(partitionId, false, 1, RecordsBeforeCombine,
 			RawLengthBeforeMerge, RawLengthBeforeMerge);
 		mapper.getMerge().addAfterMergeItem(partitionId,
-			RecordsBeforeCombine, RecordsAfterCombine, RawLength,
+			RecordsAfterCombine, RawLength,
 			CompressedLength);
 		
 
@@ -204,16 +206,19 @@ public class TaskLogParser {
 			syslog[i].lastIndexOf('<') + 1,
 			syslog[i].lastIndexOf('>'));
 
-		long[] values = extractLongNumber(valueStr, 3);
+		String combineStr = syslog[i].substring(syslog[i].indexOf('=') + 2, syslog[i].indexOf('<') - 1);
+		boolean hasCombine = Boolean.parseBoolean(combineStr);
+		long[] values = extractLongNumber(valueStr, 4);
 		int SegmentsNum = (int) values[0]; // 32
-		long RawLength = values[1]; // 4852329
-		long CompressedLength = values[2]; // 4852457
+		long records = values[1];
+		long RawLength = values[2]; // 4852329
+		long CompressedLength = values[3]; // 4852457
 		// System.out.println("[BeforeMerge][" + partitionIdStart + "]["
 		// + startMergeTimeMS + "] SegmentsNum = " +
 		// SegmentsNum + ", RawLength = " + RawLength +
 		// ", CompressedLength = " + CompressedLength);
-		mapper.getMerge().addBeforeMergeItem(partitionIdStart,
-			SegmentsNum, RawLength, CompressedLength);
+		mapper.getMerge().addBeforeMergeItem(partitionIdStart, hasCombine,
+			SegmentsNum, records, RawLength, CompressedLength);
 		
 		for (int j = i + 1; j < syslog.length; j++) {
 		    if (syslog[j].contains("AfterMergeAndCombine")) {
@@ -233,7 +238,7 @@ public class TaskLogParser {
 			long CompressedLengthEnd = values[3]; // 1986502
 
 			mapper.getMerge().addAfterMergeItem(partitionIdEnd,
-				RecordsBeforeMerge, RecordsAfterMerge,
+				RecordsAfterMerge,
 				RawLengthEnd, CompressedLengthEnd);
 			// System.out.println("[AfterMergeAndCombine][" +
 			// partitionIdEnd + "][" + stopMergeTimeMS +
@@ -331,7 +336,9 @@ public class TaskLogParser {
 	    }
 	    
 	    else if (syslog[i].contains("[InMemoryShuffleMerge begins]")) {
-
+		String idStr = syslog[i].substring(syslog[i].indexOf('(') + 1, syslog[i].lastIndexOf(')'));
+		String[] taskIds = idStr.split(", ");
+		reducer.getMergeInShuffle().addShuffleBeforeMergeItem(taskIds);
 		reducer.setInMemMergeRunning(true);
 
 	    }
@@ -457,14 +464,18 @@ public class TaskLogParser {
 		
 
 		String valueStr = syslog[i]
-			.substring(syslog[i].indexOf('<') + 1);
+			.substring(syslog[i].indexOf('<') + 1, syslog[i].lastIndexOf('>')) ;
 		long[] values = extractLongNumber(valueStr, 2);
 
 		int InMemorySegmentsNum = (int) values[0]; // inMemSegmentsNum
 		long inMemBytes = values[1]; // inMemBytes
+		
+		String idStr = syslog[i].substring(syslog[i].indexOf('(') + 1, syslog[i].lastIndexOf(')'));
+		String[] taskIds = idStr.split(", ");
+		
 		reducer.getSort().setFinalSortMerge(
 			InMemorySegmentsNum,
-			inMemBytes);
+			inMemBytes, taskIds);
 		
 		reducer.setRunningPhase("FinalSortMerge");
 	    }

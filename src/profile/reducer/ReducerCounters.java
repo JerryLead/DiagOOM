@@ -127,9 +127,9 @@ public class ReducerCounters implements Serializable {
 
 	sb.append("[Reduce shuffle bytes]   " + reduce_shuffle_bytes + "\n");
 	sb.append("[Reduce input groups]    " + reduce_input_groups + "\n");
-	sb.append("[Reduce input records]   " + reduce_input_records + "\n\n");
+	sb.append("[Reduce input records]   " + reduce_input_records + "\n");
+	sb.append("[Reduce output records]  " + reduce_output_records + "\n\n");
 	
-	sb.append("[Reduce output records]  " + reduce_output_records + "\n");
 	sb.append("[Combine input records]  " + combine_input_records + "\n");
 	sb.append("[Combine output records] " + combine_output_records + "\n");
 

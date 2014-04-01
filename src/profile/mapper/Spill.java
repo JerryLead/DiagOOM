@@ -12,7 +12,7 @@ public class Spill implements Serializable {
 
     private List<SpillInfo> spillInfoList = new ArrayList<SpillInfo>();
 
-    // add spill infos
+    /* // add spill infos
     public void addSpillItem(boolean hasCombine, String reason,
 	    long recordsBeforeCombine, long bytesBeforeSpill,
 	    long recordAfterCombine, long rawLength, long compressedLength) {
@@ -23,7 +23,7 @@ public class Spill implements Serializable {
 		rawLength, compressedLength));
 
     }
-    
+    */
     public boolean getHasCombine() {
 	return hasCombine;
     }
@@ -41,5 +41,22 @@ public class Spill implements Serializable {
 	return sb.toString();
     }
     
+    public List<SpillInfo> getSpillInfoList() {
+	return spillInfoList;
+    }
+
+    public void addBeforeSpillItem(String reason, long records,
+	    long bytes) {
+	spillInfoList.add(new SpillInfo(reason, records, bytes));
+	
+    }
+
+    public void addAfterSpillItem(int spillid, boolean hasCombine,
+	    long recordAfterCombine, long rawLength, long compressedLength) {
+	this.hasCombine = hasCombine;
+	spillInfoList.get(spillid).setAfterSpillInfo(hasCombine, recordAfterCombine,
+		rawLength, compressedLength);
+	
+    }
 
 }

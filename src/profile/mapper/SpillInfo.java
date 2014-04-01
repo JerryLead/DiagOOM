@@ -11,28 +11,27 @@ public class SpillInfo implements Serializable {
 
     private long recordsBeforeCombine;
     private long bytesBeforeSpill;
-    private long recordsAfterCombine;
-    private long rawLength;
-    private long compressedLength;
+    private long recordsAfterCombine = -1;
+    private long rawLength = -1;
+    private long compressedLength = -1;
 
-    public SpillInfo(
-	    boolean hasCombine, 
-	    String reason,
-	    long recordsBeforeCombine, 
-	    long bytesBeforeSpill,
-	    long recordsAfterCombine, 
-	    long rawLength, 
-	    long compressedLength) {
-	
-	this.hasCombine = hasCombine;
+    
+
+    public SpillInfo(String reason, long recordsBefore, long bytesBefore) {
 	this.reason = reason;
-	this.recordsBeforeCombine = recordsBeforeCombine;
-	this.bytesBeforeSpill = bytesBeforeSpill;
-	this.recordsAfterCombine = recordsAfterCombine;
-	this.rawLength = rawLength;
-	this.compressedLength = compressedLength;
+	this.recordsBeforeCombine = recordsBefore;
+	this.bytesBeforeSpill = bytesBefore;
     }
 
+    public void setAfterSpillInfo(boolean hasCombine, long recordAfterCombine,
+	    long rawLength, long compressedLength) {
+	this.hasCombine = hasCombine;
+	this.recordsAfterCombine = recordAfterCombine;
+	this.rawLength = rawLength;
+	this.compressedLength = compressedLength;
+	
+    }
+    
     public boolean isHasCombine() {
         return hasCombine;
     }
@@ -88,5 +87,7 @@ public class SpillInfo implements Serializable {
     public void setCompressedLength(long compressedLength) {
         this.compressedLength = compressedLength;
     }
+
+    
  
 }

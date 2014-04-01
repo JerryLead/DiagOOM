@@ -8,11 +8,11 @@ public class SpillBuffer {
     
     private int io_sort_mb;
     // dataBuffer
-    private long softBufferLimit;
+    private long spillBytes;
     private long kvbufferBytes;
 
     // recordBuffer
-    private long softRecordLimit;
+    private long spillRecords;
     private long kvoffsetsLen;
 
     // current size of records in the buffer
@@ -21,27 +21,29 @@ public class SpillBuffer {
 
     // set buffer infos
     public void setDataBuffer(long softBufferLimit, long kvbufferBytes) {
-	this.softBufferLimit = softBufferLimit;
+	this.spillBytes = softBufferLimit;
 	this.kvbufferBytes = kvbufferBytes;
     }
 
     public void setRecordBuffer(long softRecordLimit, long kvoffsetsLen) {
-	this.softRecordLimit = softRecordLimit;
+	this.spillRecords = softRecordLimit;
 	this.kvoffsetsLen = kvoffsetsLen;
 
     }
 
-    public long getSoftBufferLimit() {
-	return softBufferLimit;
+    
+    public long getSpillBytes() {
+        return spillBytes;
+    }
+
+    public long getSpillRecords() {
+        return spillRecords;
     }
 
     public long getKvbufferBytes() {
 	return kvbufferBytes;
     }
 
-    public long getSoftRecordLimit() {
-	return softRecordLimit;
-    }
 
     public long getKvoffsetsLen() {
 	return kvoffsetsLen;

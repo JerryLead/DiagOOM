@@ -4,45 +4,54 @@ import java.io.Serializable;
 
 public class MapFunc implements Serializable {
 
-
     private static final long serialVersionUID = 3972332854774013306L;
-    
-    private long mapInputRecords; // equals "Map input records"
-    private long mapInputBytes; // equals "HDFS_BYTES_READ"
 
-    private long mapOutputRecords; // equals "Map output records"
-    private long mapOutputBytes; // equals "Map output bytes"
+    private long cmapInputRecords; // current "Map input records"
+    private long cmapInputBytes; // current "HDFS_BYTES_READ"
 
-    public long getMapInputRecords() {
-	return mapInputRecords;
+    private long cmapOutputRecords; // current "Map output records"
+    private long cmapOutputBytes; // current "Map output bytes"
+
+    private long tmapInputBytes; // total "HDFS_BYTES_READ"
+
+    public long getCmapInputRecords() {
+	return cmapInputRecords;
     }
 
-    public void setMapInputRecords(long mapInputRecords) {
-	this.mapInputRecords = mapInputRecords;
+    public void setCmapInputRecords(long cmapInputRecords) {
+	this.cmapInputRecords = cmapInputRecords;
     }
 
-    public long getMapInputBytes() {
-	return mapInputBytes;
+    public long getCmapInputBytes() {
+	return cmapInputBytes;
     }
 
-    public void setMapInputBytes(long mapInputBytes) {
-	this.mapInputBytes = mapInputBytes;
+    public void setCmapInputBytes(long cmapInputBytes) {
+	this.cmapInputBytes = cmapInputBytes;
     }
 
-    public long getMapOutputRecords() {
-	return mapOutputRecords;
+    public long getCmapOutputRecords() {
+	return cmapOutputRecords;
     }
 
-    public void setMapOutputRecords(long mapOutputRecords) {
-	this.mapOutputRecords = mapOutputRecords;
+    public void setCmapOutputRecords(long cmapOutputRecords) {
+	this.cmapOutputRecords = cmapOutputRecords;
     }
 
-    public long getMapOutputBytes() {
-	return mapOutputBytes;
+    public long getCmapOutputBytes() {
+	return cmapOutputBytes;
     }
 
-    public void setMapOutputBytes(long mapOutputBytes) {
-	this.mapOutputBytes = mapOutputBytes;
+    public void setCmapOutputBytes(long cmapOutputBytes) {
+	this.cmapOutputBytes = cmapOutputBytes;
+    }
+
+    public long getTmapInputBytes() {
+	return tmapInputBytes;
+    }
+
+    public void setTmapInputBytes(long tmapInputBytes) {
+	this.tmapInputBytes = tmapInputBytes;
     }
 
 }

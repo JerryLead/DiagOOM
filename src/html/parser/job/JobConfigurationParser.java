@@ -3,14 +3,14 @@ package html.parser.job;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import profile.job.Job;
+import profile.job.JobProfile;
 
 import html.util.HtmlFetcher;
 import html.parser.link.LinksSaver;
 
 public class JobConfigurationParser {
 
-    public static void parseJobConf(LinksSaver linksSaver, Job job) {
+    public static void parseJobConf(LinksSaver linksSaver, JobProfile job) {
 	
 	String jobConfLink = linksSaver.getJobconf_jsp();
 	

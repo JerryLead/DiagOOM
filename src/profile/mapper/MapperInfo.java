@@ -29,8 +29,8 @@ public class MapperInfo implements Serializable {
     private List<String> heapdumps;
     
     public MapperInfo() {
-	this.runningPhase = "init";
-	this.isMapRunning = false;
+	this.runningPhase = "init"; // map, spill, merge, over
+	this.isMapRunning = false; 
 	
 	this.input = new Input();
 	this.buffer = new MapperBuffer();

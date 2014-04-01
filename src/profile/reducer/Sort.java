@@ -7,7 +7,7 @@ public class Sort implements Serializable {
     private static final long serialVersionUID = -2666953270300858669L;
 
     private InMemorySortMerge inMemorySortMerge; // Segments in [ShuffleBound - ReduceBuffer] ==> onDiskSeg
-    						 // if(count(onDiskSegs) < io.sort.factor)
+    						 // && if(count(onDiskSegs) < io.sort.factor)
     
     private MixSortMerge mixSortMerge; // Segments in ShuffleBound (not merged in InMemorySortMerge) + onDiskSegs ==> logical big segment
     					
@@ -25,8 +25,13 @@ public class Sort implements Serializable {
 		bytesBeforeMerge, rawLength, compressedLength);
     }
     
-    public void setFinalSortMerge(int inMemSegsNum, long inMemBytes) {
-	finalSortMerge = new FinalSortMerge(inMemSegsNum, inMemBytes);
+    public void setFinalSortMerge(int inMemSegsNum, long inMemBytes, String[] taskIds) {
+	
+	int[] segMapperIds = new int[taskIds.length];
+	for(int i = 0; i < segMapperIds.length; i++)
+	    segMapperIds[i] = Integer.parseInt(taskIds[i]);
+	
+	finalSortMerge = new FinalSortMerge(inMemSegsNum, inMemBytes, segMapperIds);
     }
 
     public void setMixSortMerge(
@@ -63,9 +68,12 @@ public class Sort implements Serializable {
 		    + mixSortMerge.getInMemSegsBytes() + ", OnDiskSegsNum = " + mixSortMerge.getOnDiskSegsNum()
 		    + ", OnDiskSegsBytes = " + mixSortMerge.getOnDiskSegsBytes() + "\n");
 	
-	if(finalSortMerge != null)
+	if(finalSortMerge != null) {
 	    sb.append("[FinalSortMerge] " + "InMemSegsNum = " + finalSortMerge.getInMemSegsNum() + ", InMemSegsBytes = " 
 		    + finalSortMerge.getInMemSegsBytes() + "\n");
+	    sb.append("[SegsInReduceBuffer] " + finalSortMerge.getSegIdsToString() + "\n");
+	}
+	
 	return sb.toString();
     }
     

@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import profile.job.Job;
+import profile.job.JobProfile;
 import profile.job.JobTasksParser;
 import profile.mapper.MapperInfo;
 import profile.reducer.ReducerInfo;
@@ -16,12 +16,12 @@ import html.parser.task.MapTaskParser;
 import html.parser.task.ReduceTaskParser;
 
 public class SingleJobProfiler {
-    private Job job;
+    private JobProfile job;
     private LinksSaver linksSaver;
     private String oomTaskId;
 
     public SingleJobProfiler(String hostname, String jobId) {
-	job = new Job();
+	job = new JobProfile();
 	linksSaver = new LinksSaver(hostname, jobId);
     }
 
@@ -30,7 +30,7 @@ public class SingleJobProfiler {
 	this.oomTaskId = oomTaskId;
     }
 
-    public Job profile() {
+    public JobProfile profile() {
 
 
 	JobConfigurationParser.parseJobConf(linksSaver, job); // get the
@@ -65,7 +65,7 @@ public class SingleJobProfiler {
 	}
     }
 
-    private static void serialize(String serializeDir, Job job, String jobId) {
+    private static void serialize(String serializeDir, JobProfile job, String jobId) {
 	File jobFile = new File(serializeDir, jobId + ".out");
 	if (!jobFile.getParentFile().exists())
 	    jobFile.getParentFile().mkdirs();
@@ -87,7 +87,7 @@ public class SingleJobProfiler {
     }
 
     public static void main(String[] args) {
-	String jobId = "job_201403261726_0001";
+	String jobId = "job_201404011532_0002";
 	String oomTaskId = "attempt_201403211644_0007_m_000000_0";
 	
 	String hostname = "master";
@@ -95,7 +95,7 @@ public class SingleJobProfiler {
 
 	SingleJobProfiler profiler = new SingleJobProfiler(hostname, jobId);
 
-	Job job = profiler.profile();
+	JobProfile job = profiler.profile();
 	
 	System.out.println("## Mapper");
 	System.out.println(job.getMapperInfoList().get(0));
