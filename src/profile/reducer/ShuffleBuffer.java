@@ -21,4 +21,14 @@ public class ShuffleBuffer implements Serializable {
     public String toString() {
 	return "[ShuffleBound] " + shuffleBound / 1024 / 1024 + " MB\n";
     }
+
+    public long getShuffleBound() {
+        return shuffleBound;
+    }
+
+    public long getMaxSingleRecordBytes() {
+        return maxSingleRecordBytes;
+    }
+    
+    
 }

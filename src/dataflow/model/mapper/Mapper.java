@@ -21,6 +21,7 @@ public class Mapper {
     private boolean isMapRunning;
     private String runningPhase;
     private Configuration conf;
+    private int id;
 
     private InputSplit split;
     private MapFunc mapFunc;
@@ -28,7 +29,7 @@ public class Mapper {
     private MemCombineFunc memCombineFunc;
     private List<SpillPiece> spills;
     private DiskCombineFunc diskCombineFunc;
-    private List<Segment> mapOutputs;
+    private List<Segment> mapOutputSegs;
     private List<MergeAction> merges;
 
     private long file_bytes_read;
@@ -46,7 +47,7 @@ public class Mapper {
 	    memCombineFunc = new MemCombineFunc();
 	spills = new ArrayList<SpillPiece>();
 	
-	mapOutputs = new ArrayList<Segment>();
+	mapOutputSegs = new ArrayList<Segment>();
 	merges = new ArrayList<MergeAction>();
     }
 
@@ -54,6 +55,8 @@ public class Mapper {
 	this.taskId = taskId;
 	this.isMapRunning = isMapRunning;
 	this.runningPhase = runningPhase;
+	
+	id = Integer.parseInt(taskId.substring(taskId.indexOf("_m_") + 3, taskId.lastIndexOf('_')));
     }
     
     public void setInputSplit(Input input) {
@@ -135,7 +138,10 @@ public class Mapper {
 	    diskCombineFunc.setcCombineOutputRecords(counters.getCombine_output_records() 
 		    - combineOutputRecsInSpills - outputRecsInPreviousMerges);
 	}
-	 
+	
+	for(MergeAction action : merges) {
+	    mapOutputSegs.add(new Segment(id, action.getPartitionId(), action.getRecordsAfter(), action.getBytesAfter()));
+	}
 	
     }
     
@@ -180,12 +186,27 @@ public class Mapper {
 	return diskCombineFunc;
     }
    
-    public List<Segment> getMapOutputs() {
-	return mapOutputs;
+    public List<Segment> getMapOutputSegs() {
+        return mapOutputSegs;
     }
 
     public List<MergeAction> getMerges() {
 	return merges;
     }
 
+    public boolean isMapRunning() {
+        return isMapRunning;
+    }
+
+    public String getRunningPhase() {
+        return runningPhase;
+    }
+
+    public long getTotal_committed_bytes() {
+        return total_committed_bytes;
+    }
+
+  
+
+    
 }

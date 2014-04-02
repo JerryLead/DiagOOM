@@ -49,4 +49,19 @@ public class Shuffle implements Serializable {
 	return sb.toString();
     }
 
+    public int[] getShuffledSegIds() {
+	int[] ids = new int[shuffleInfoList.size()];
+	
+	for(int i = 0; i < shuffleInfoList.size(); i++) {
+	    ShuffleInfo info = shuffleInfoList.get(i);
+	    ids[i] = getTaskId(info.getSourceTaskId());
+	}
+	
+	return ids;
+    }
+    
+    public int getTaskId(String taskId) {
+	return Integer.parseInt(taskId.substring(taskId.indexOf("_r_") + 3, taskId.lastIndexOf('_')));
+    }
+    
 }

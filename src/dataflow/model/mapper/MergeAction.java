@@ -23,7 +23,31 @@ public class MergeAction {
 	this.bytesAfter = mergeInfo.getRawLengthAfterMerge();
     }
 
-  
+    public int getPartitionId() {
+        return partitionId;
+    }
+
+    public int getSegmentsNum() {
+        return segmentsNum;
+    }
+
+    public long getRecordsBefore() {
+        return recordsBefore;
+    }
+
+    public long getBytesBefore() {
+        return bytesBefore;
+    }
+
+    public long getRecordsAfter() {
+        return recordsAfter;
+    }
+
+    public long getBytesAfter() {
+        return bytesAfter;
+    }
+
+    
 
     
 }

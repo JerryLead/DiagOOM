@@ -86,6 +86,18 @@ public class ReducerInfo implements Serializable {
    	heapdumps.add(heapdump);
     }
     
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public String getRunningPhase() {
+        return runningPhase;
+    }
+
+    public boolean isInMemMergeRunning() {
+        return isInMemMergeRunning;
+    }
+
     public String toString() {
   	StringBuilder sb = new StringBuilder();
 

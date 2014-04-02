@@ -31,6 +31,10 @@ public class MergeInShuffle implements Serializable {
 
     }
     
+    public List<InMemoryShuffleMerge> getInMemoryShuffleMerges() {
+	return inMemoryShuffleMergeList;
+    }
+    
     public String toString() {
 	
 	StringBuilder sb = new StringBuilder();
