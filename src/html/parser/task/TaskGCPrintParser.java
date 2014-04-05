@@ -62,7 +62,7 @@ public class TaskGCPrintParser {
    			heapBefore, heapCurrent, heapCommitted);
    	    }
    	    
-   	    else if (syslog[i].startsWith("Heap")) {
+   	    else if (syslog[i].equals("Heap")) {
    		// PSYoungGen
    		i++;
    		long[] values = extractLongNumber(syslog[i], 2);

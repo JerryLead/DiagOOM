@@ -21,17 +21,16 @@ public class SegmentsInShuffle {
     
     private List<Segment> totalSegments;
     
-    private List<Segment> shuffledSegments;
+    private List<Integer> shuffledSegments;
     
-    private List<Segment> liveSegments;
-    private List<Segment> segmentsInCopy;
-    private List<Segment> segmentsInList;
+    private List<Integer> liveSegments;
     
-    private List<Segment> segmentsInMerge;
+    private List<Integer> processedSegments; // have been added into memory
    
     public SegmentsInShuffle() {
-	this.shuffledSegments = new ArrayList<Segment>();
-	this.liveSegments = new ArrayList<Segment>();
+	this.shuffledSegments = new ArrayList<Integer>();
+	this.liveSegments = new ArrayList<Integer>();
+	this.processedSegments = new ArrayList<Integer>();
     }
     
     public void setBuffer(ShuffleBuffer buffer, Configuration conf) {
@@ -46,22 +45,25 @@ public class SegmentsInShuffle {
 	this.totalSegments = totalSegments;
 	
 	int[] shuffledSegIds = shuffle.getShuffledSegIds();
+	
 	Set<Integer> set = new HashSet<Integer>();
 	
 	for(int id : shuffledSegIds) {
-	    shuffledSegments.add(totalSegments.get(id));
+	    shuffledSegments.add(id);
 	    set.add(id);
 	}
 	
 	for(InMemoryShuffleMerge merge : mergeInShuffle.getInMemoryShuffleMerges()) {
 	    int[] mergeIds = merge.getSegMapperIds();
 	    
-	    for(int id : mergeIds) 
+	    for(int id : mergeIds) {
 		set.remove(id);
+		processedSegments.add(id);
+	    }
 	}
 	
 	for(Integer id : set) 
-	    liveSegments.add(totalSegments.get(id));
+	    liveSegments.add(id);
     }
 
     public long getRecordsBeforeLastMerge(int[] ids) {
@@ -72,9 +74,9 @@ public class SegmentsInShuffle {
 	for(int id : ids)
 	    idSet.add(id);
 	
-	for(Segment s : shuffledSegments) {
-	    if(idSet.contains(s.getTaskId())) 
-		records += s.getRecords();
+	for(int id : shuffledSegments) {
+	    if(idSet.contains(id)) 
+		records += totalSegments.get(id).getRecords();
 	}
 	
 	return records;
@@ -87,9 +89,9 @@ public class SegmentsInShuffle {
 	for(int id : ids)
 	    idSet.add(id);
 	
-	for(Segment s : shuffledSegments) {
-	    if(idSet.contains(s.getTaskId())) 
-		list.add(s);
+	for(int id : shuffledSegments) {
+	    if(idSet.contains(id)) 
+		list.add(totalSegments.get(id));
 	}
 	
 	return list;
@@ -98,12 +100,22 @@ public class SegmentsInShuffle {
     public long getShuffledRecords() {
 	long records = 0;
 	
-	for(Segment s : shuffledSegments) 
-	   records += s.getRecords();
+	for(int id : shuffledSegments) 
+	   records += totalSegments.get(id).getRecords();
 	
 	return records;
     }
     
-    
+    public long getShuffleBound() {
+	return shuffleBound;
+    }
+
+    public List<Segment> getTotalSegments() {
+        return totalSegments;
+    }
+
+    public List<Integer> getProcessedSegments() {
+        return processedSegments;
+    }
     
 }

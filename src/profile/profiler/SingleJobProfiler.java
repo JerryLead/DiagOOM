@@ -76,18 +76,16 @@ public class SingleJobProfiler {
 	    oos.writeObject(job);
 	    oos.flush();
 	    oos.close();
-	} catch (FileNotFoundException e) {
-	    // TODO Auto-generated catch block
+	} catch (FileNotFoundException e) {    
 	    e.printStackTrace();
 	} catch (IOException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 
     }
 
     public static void main(String[] args) {
-	String jobId = "job_201404011532_0002";
+	String jobId = "job_201404031543_0003";
 	String oomTaskId = "attempt_201403211644_0007_m_000000_0";
 	
 	String hostname = "master";
@@ -100,7 +98,7 @@ public class SingleJobProfiler {
 	System.out.println("## Mapper");
 	System.out.println(job.getMapperInfoList().get(0));
 	System.out.println("\n## Reducer");
-	System.out.println(job.getReducerInfoList().get(0));
+	System.out.println(job.getReducerInfoList().get(1));
 	
 	serialize(serializeDir, job, jobId);
     }

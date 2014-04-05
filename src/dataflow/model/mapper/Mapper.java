@@ -22,6 +22,7 @@ public class Mapper {
     private String runningPhase;
     private Configuration conf;
     private int id;
+    private boolean hasReducer;
 
     private InputSplit split;
     private MapFunc mapFunc;
@@ -42,6 +43,7 @@ public class Mapper {
 	split = new InputSplit();
 	mapFunc = new MapFunc();
 	spillBuffer = new SpillBuffer();
+	this.hasReducer = conf.getMapred_reduce_tasks() == 0 ? false : true;
 	
 	if(conf.getMapreduce_combine_class() != null) 
 	    memCombineFunc = new MemCombineFunc();
@@ -206,7 +208,13 @@ public class Mapper {
         return total_committed_bytes;
     }
 
-  
+    public boolean hasReducer() {
+        return hasReducer;
+    }
 
+    public Configuration getConf() {
+	return conf;
+    }
+    
     
 }

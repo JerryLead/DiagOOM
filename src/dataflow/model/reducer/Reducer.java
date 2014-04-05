@@ -126,6 +126,9 @@ public class Reducer {
 	reduceFunc.setcReduceOutputRecords(counters.getReduce_output_records());
     }
     
+    public SegmentsInShuffle getSegsInShuffle() {
+	return segsInShuffle;
+    }
    
     
 }

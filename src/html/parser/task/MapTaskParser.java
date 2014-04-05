@@ -28,7 +28,7 @@ public class MapTaskParser {
 	String counterLink = tr.child(8).child(0).absUrl("href");
 	parseMapTaskCounters(counterLink, mapper); // set task counters
 
-	String logLink = tr.child(7).child(4).absUrl("href");
+	String logLink = tr.child(7).select("a[href]").get(2).absUrl("href");
 	parseMapTaskLog(logLink, mapper); // set task log infos
 	parseGCPrint(logLink, mapper);
 	

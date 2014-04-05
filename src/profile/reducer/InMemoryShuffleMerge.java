@@ -7,6 +7,7 @@ public class InMemoryShuffleMerge implements Serializable {
 
     private static final long serialVersionUID = -7901371762296157181L;
     
+  
     private int[] segMapperIds;
     
     private int segmentsNum;
@@ -30,6 +31,7 @@ public class InMemoryShuffleMerge implements Serializable {
 	this.recordsAfterCombine = recordsAfterCombine;
 	this.rawLength = rawLength;
 	this.compressedLength = compressedLength;
+	
     }
 
     public int[] getSegMapperIds() {

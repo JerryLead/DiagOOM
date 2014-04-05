@@ -12,6 +12,7 @@ public class ReduceTaskParser {
 
     public static ReducerInfo parseReduceTask(String reduceTaskDetailsJsp) {
 	Document reduceDetails = HtmlFetcher.getHtml(reduceTaskDetailsJsp);
+	/*
 	Element tr = null;
 	for (Element elem : reduceDetails.getElementsByTag("tbody").first()
 		.children()) {
@@ -20,6 +21,8 @@ public class ReduceTaskParser {
 		break;
 	    }
 	}
+	*/
+	Element tr = reduceDetails.getElementsByTag("tbody").first().child(1);
 
 	ReducerInfo reducer = new ReducerInfo();
 
@@ -33,7 +36,7 @@ public class ReduceTaskParser {
 	String countersLink = tr.child(10).child(0).absUrl("href");
 	parseReduceTaskCounters(countersLink, reducer);
 
-	String logLink = tr.child(9).child(4).absUrl("href");
+	String logLink = tr.child(9).select("a[href]").get(2).absUrl("href");
 	parseReduceTaskLog(logLink, reducer);
 	parseGCPrint(logLink, reducer);
 	
@@ -45,6 +48,7 @@ public class ReduceTaskParser {
     }
 
     private static void parseGCPrint(String logLink, ReducerInfo reducer) {
+	
    	TaskGCPrintParser.parseGCPrint(logLink, reducer.getJvmUsage());
     }
     
