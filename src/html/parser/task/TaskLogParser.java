@@ -335,6 +335,21 @@ public class TaskLogParser {
 		// System.out.println(syslog[i]);
 	    }
 	    
+	    // Read 66339361 bytes from map-output for attempt_201404061331_0008_m_000012_0
+	    else if (syslog[i].contains("bytes from map-output for")) {
+		int start = syslog[i].indexOf("Read") + 5;
+		int end = syslog[i].indexOf("bytes", start) - 1;
+		long bytes = Long.parseLong(syslog[i].substring(start, end));
+		
+		String sourceTaskId = syslog[i].substring(syslog[i].indexOf("for") + 4); // attempt_201208242049_0014_m_000050_0
+		// System.out.println("[Shuffling][" + shuffleFinishTimeMS +
+		// "][" + storeLoc + "] decompressedLen = " + decompressedLen +
+		// ", compressedLen = " + compressedLen);
+		reducer.getShuffle().addShuffleItem(sourceTaskId, "Disk",
+			bytes, bytes);
+		
+	    }
+	    
 	    else if (syslog[i].contains("[InMemoryShuffleMerge begins]")) {
 		String idStr = syslog[i].substring(syslog[i].indexOf('(') + 1, syslog[i].lastIndexOf(')'));
 		String[] taskIds = idStr.split(", ");

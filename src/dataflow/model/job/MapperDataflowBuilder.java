@@ -18,11 +18,12 @@ public class MapperDataflowBuilder {
 	    
 	    mapper.setBasicInfo(info.getTaskId(), info.isMapRunning(), info.getRunningPhase());
 	    mapper.setInputSplit(info.getInput());
+	    mapper.setMapFunc(info.getCounters());
 	    mapper.setSpillBuffer(info.getBuffer());
 	    mapper.setSpills(info.getSpill(), info.getCounters());
 	    mapper.setMerges(info.getMerge(), info.getCounters());
 	    
-	    mappers.add(mapper);    
+	    mappers.add(mapper);
 	}
 	
 	return mappers;

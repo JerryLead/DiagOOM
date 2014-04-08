@@ -7,17 +7,23 @@ import dataflow.model.reducer.Reducer;
 
 public class Job {
     
-    private Mapper mappers;
-    private Reducer reducers;
+    private List<Mapper> mappers;
+    private List<Reducer> reducers;
 
     public void setMappsers(List<Mapper> mappers) {
-	// TODO Auto-generated method stub
-	
+	this.mappers = mappers;
     }
 
-    public void setReducers(List<Reducer> reducers2) {
-	// TODO Auto-generated method stub
-	
+    public void setReducers(List<Reducer> reducers) {
+	this.reducers = reducers;
+    }
+    
+    public List<Mapper> getMappers() {
+	return mappers;
+    }
+    
+    public List<Reducer> getReducers() {
+	return reducers;
     }
 
 }

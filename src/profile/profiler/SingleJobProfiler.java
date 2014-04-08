@@ -85,11 +85,11 @@ public class SingleJobProfiler {
     }
 
     public static void main(String[] args) {
-	String jobId = "job_201404031543_0003";
+	String jobId = "job_201404061331_0008";
 	String oomTaskId = "attempt_201403211644_0007_m_000000_0";
 	
 	String hostname = "master";
-	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/PigMapJoin/";
+	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/Test/";
 
 	SingleJobProfiler profiler = new SingleJobProfiler(hostname, jobId);
 
@@ -98,7 +98,7 @@ public class SingleJobProfiler {
 	System.out.println("## Mapper");
 	System.out.println(job.getMapperInfoList().get(0));
 	System.out.println("\n## Reducer");
-	System.out.println(job.getReducerInfoList().get(1));
+	System.out.println(job.getReducerInfoList().get(0));
 	
 	serialize(serializeDir, job, jobId);
     }

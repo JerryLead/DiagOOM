@@ -1,5 +1,6 @@
 package dataflow.model.reducer;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,27 @@ public class SegmentsInShuffle {
 	this.shuffledSegments = new ArrayList<Integer>();
 	this.liveSegments = new ArrayList<Integer>();
 	this.processedSegments = new ArrayList<Integer>();
+    }
+    
+    public String toString() {
+	DecimalFormat f = new DecimalFormat(",###");
+	
+	StringBuilder sb = new StringBuilder();
+	sb.append("[Runtime_heap] = " + f.format(runtime_maxMemory) + "\n");
+	sb.append("[ShuffleBound] = " + f.format(shuffleBound) + "\n");
+	sb.append("[MergeBound]   = " + f.format(mergeBound) + "\n\n");
+	
+	sb.append("------------ Total segments ------------\n");
+	for(Segment s : totalSegments) 
+	    sb.append(s + "\n");
+	
+	sb.append("\n");
+	
+	sb.append("[ShuffledSegments] = " + shuffledSegments + "\n");
+	sb.append("[addedIntoMemorySegs] = " + processedSegments + "\n");
+	
+	return sb.toString();
+	
     }
     
     public void setBuffer(ShuffleBuffer buffer, Configuration conf) {

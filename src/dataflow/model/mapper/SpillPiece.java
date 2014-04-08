@@ -36,6 +36,11 @@ public class SpillPiece {
 	);
     }
 
+    public String toString() {
+	 return "records = " + recordsBefore + " | " + recordsAfter 
+		 + ", bytes = " + bytesBefore + " | " + bytesAfter;
+    }
+    
     public boolean isHasCombine() {
         return hasCombine;
     }

@@ -57,7 +57,7 @@ public class TaskGCPrintParser {
    		float heapCurrent = ((float) values[7]) / 1024;
    		float heapCommitted = ((float) values[8]) / 1024;
    		
-   		jvmUsage.addFullGCItem(newGenBefore, newGenCurrent, newGenCommitted, 
+   		jvmUsage.setFullGCItem(newGenBefore, newGenCurrent, newGenCommitted, 
    			oldGenBefore, oldGenCurrent, oldGenCommitted, 
    			heapBefore, heapCurrent, heapCommitted);
    	    }
@@ -113,6 +113,7 @@ public class TaskGCPrintParser {
    		
    		jvmUsage.addHeapUsage("oldGen", total, used, bound);
    		
+   		jvmUsage.computeOOMUsage();
    		break;
    	    }
    		

@@ -1,5 +1,7 @@
 package dataflow.model.reducer;
 
+import java.text.DecimalFormat;
+
 public class ReduceFunc {
     private long tReduceInputRecords;
 
@@ -8,6 +10,17 @@ public class ReduceFunc {
 
     private long cReduceOutputRecords;
 
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+	DecimalFormat f = new DecimalFormat(",###");
+	
+	sb.append("[Reduce input records] " + f.format(cReduceInputRecords) + " | " + f.format(tReduceInputRecords) + "\n");
+	sb.append("[Reduce input groups] " + f.format(cReduceInputGroups) + "\n");
+	sb.append("[Reduce output records] " + f.format(cReduceOutputRecords) + "\n");
+
+	return sb.toString();
+    }
+    
     public long gettReduceInputRecords() {
 	return tReduceInputRecords;
     }

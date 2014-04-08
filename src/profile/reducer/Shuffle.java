@@ -61,7 +61,7 @@ public class Shuffle implements Serializable {
     }
     
     public int getTaskId(String taskId) {
-	return Integer.parseInt(taskId.substring(taskId.indexOf("_r_") + 3, taskId.lastIndexOf('_')));
+	return Integer.parseInt(taskId.substring(taskId.indexOf("_m_") + 3, taskId.lastIndexOf('_')));
     }
     
 }

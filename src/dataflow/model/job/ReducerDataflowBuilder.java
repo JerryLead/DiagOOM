@@ -24,7 +24,7 @@ public class ReducerDataflowBuilder {
 	    reducer.setSegmentInRedeuceBuffer(info.getSort());
 	    reducer.setReduce(info.getReducerCounters());
 	    
-	    reducers.add(reducer);    
+	    reducers.add(reducer);
 	}
 	
 	return reducers;

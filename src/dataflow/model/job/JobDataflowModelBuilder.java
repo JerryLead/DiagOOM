@@ -11,21 +11,21 @@ public class JobDataflowModelBuilder {
    
     
     public static void main(String[] args) {
-	String jobId = "job_201403261726_0001";
+	String jobId = "job_201404061331_0008";
 
-	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/PigMapJoin/";
+	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/Test/";
 
 	JobProfile jobProfile = JobProfileFromSerialization.deserialization(serializeDir, jobId);
 
 	Job job = buildDataflow(jobProfile);
 	
-	/*
-	System.out.println("## Mapper");
-	System.out.println(job.getMapperInfoList().get(0));
-	System.out.println("\n## Reducer");
 	
-	System.out.println(job.getReducerInfoList().get(0));
-	*/
+	System.out.println("## Mapper");
+	System.out.println(job.getMappers().get(0));
+	
+	System.out.println("\n## Reducer");
+	System.out.println(job.getReducers().get(0));
+	
     }
 
     public static Job buildDataflow(JobProfile jobProfile) {

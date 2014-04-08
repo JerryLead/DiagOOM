@@ -2,11 +2,12 @@ package dataflow.model.mapper;
 
 public class Segment {
 
-    int partitionId;
-    int taskId;
+   
+    private int partitionId;
+    private int taskId;
     
-    long records;
-    long bytes;
+    private long records;
+    private long bytes;
 
     public Segment(int taskId, int partitionId, long records, long bytes) {
 	this.taskId = taskId;
@@ -31,5 +32,9 @@ public class Segment {
         return taskId;
     }
 
+    public String toString() {
+	return "[partition " + partitionId + "][taskId " + taskId + "] records = " 
+		+ records + ", bytes = " + bytes;
+    }
     
 }

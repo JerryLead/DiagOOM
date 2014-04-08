@@ -14,7 +14,7 @@ public class JvmUsage implements Serializable {
     private List<JstatItem> jstatMetricsList = new ArrayList<JstatItem>();
     private GcCapacity gcCap;
 
-    private List<FullGCItem> fullGCItemList = new ArrayList<FullGCItem>();
+    private FullGCItem fullGCItem;
     
     
     private HeapUsage newGen;
@@ -22,8 +22,30 @@ public class JvmUsage implements Serializable {
     private HeapUsage from;
     private HeapUsage to;
     private HeapUsage oldGen;
-
- 
+    
+    private OOMHeapUsage newGeneration;
+    private OOMHeapUsage oldGeneration;
+    private OOMHeapUsage heap;
+    
+    
+    public void computeOOMUsage() {
+	newGeneration = new OOMHeapUsage(newGen.getUsed(), newGen.getCommitted(), newGen.getTotal());
+	oldGeneration = new OOMHeapUsage(oldGen.getUsed(), oldGen.getCommitted(), oldGen.getTotal());
+	heap = new OOMHeapUsage(newGen.getUsed() + oldGen.getUsed(), newGen.getCommitted()
+		+ oldGen.getCommitted(), newGen.getTotal() + oldGen.getTotal());
+	
+	if(fullGCItem != null) {
+	    newGeneration.setUsed(fullGCItem.getNewGenCurrent());
+	    newGeneration.setCommitted(fullGCItem.getNewGenCommitted());
+	    
+	    oldGeneration.setUsed(fullGCItem.getOldGenCurrent());
+	    oldGeneration.setCommitted(fullGCItem.getOldGenCommitted());
+	    
+	    heap.setUsed(fullGCItem.getHeapCurrent());
+	    heap.setCommitted(fullGCItem.getHeapCommitted());
+	}
+    }
+    
     public void addJstatMetrics(String[] jstatParams) {
 	JstatItem item = new JstatItem(jstatParams);
 	jstatMetricsList.add(item);
@@ -53,22 +75,30 @@ public class JvmUsage implements Serializable {
 	this.gcCap = gcCap;
     }
 
+    /*
     public void addYoungGCItem(float newGenBefore, float newGenCurrent,
 	    float newGenCommitted, float heapBefore, float heapCurrent,
 	    float heapCommitted) {
 	// TODO Auto-generated method stub
 	
     }
-
-    public void addFullGCItem(float newGenBefore, float newGenCurrent,
+    */
+    
+    public void setFullGCItem(float newGenBefore, float newGenCurrent,
 	    float newGenCommitted, float oldGenBefore, float oldGenCurrent,
 	    float oldGenCommitted, float heapBefore, float heapCurrent,
 	    float heapCommitted) {
 	
-	fullGCItemList.add(new FullGCItem(newGenBefore, newGenCurrent, newGenCommitted, 
+	if(fullGCItem == null) {
+	    fullGCItem = new FullGCItem(newGenBefore, newGenCurrent, newGenCommitted, 
 			oldGenBefore, oldGenCurrent, oldGenCommitted, 
-			heapBefore, heapCurrent, heapCommitted));
-	
+			heapBefore, heapCurrent, heapCommitted);
+	}
+	else if(heapCurrent >= fullGCItem.getHeapCurrent()){
+	    fullGCItem = new FullGCItem(newGenBefore, newGenCurrent, newGenCommitted, 
+			oldGenBefore, oldGenCurrent, oldGenCommitted, 
+			heapBefore, heapCurrent, heapCommitted);
+	}
     }
 
     public void addHeapUsage(String name, float total,
@@ -99,6 +129,7 @@ public class JvmUsage implements Serializable {
     }
 
     public String toString() {
+	/*
 	if(newGen == null)
 	    return "";
 	StringBuilder sb = new StringBuilder();
@@ -109,6 +140,21 @@ public class JvmUsage implements Serializable {
 	sb.append("[from] " + (int)from.getUsed() + " | " + (int)from.getCommitted() + " | " + (int)from.getTotal() + "\n");
 	sb.append("[to] " + (int)to.getUsed() + " | " + (int)to.getCommitted() + " | " + (int)to.getTotal() + "\n");
 	sb.append("[OldGen] " + (int)oldGen.getUsed() + " | " + (int)oldGen.getCommitted() + " | " + (int)oldGen.getTotal() + "\n");
+	
+	return sb.toString();
+	*/
+	if(newGen == null)
+	    return "";
+	
+	StringBuilder sb = new StringBuilder();
+	
+	sb.append("[Space] Used | Committed | Total\n");
+	sb.append("[Heap] " + (int)heap.getUsed() + " | " + (int)heap.getCommitted() + " | " 
+		+ (int)heap.getTotal() + "\n");
+	sb.append("[NewGen] " + (int)newGeneration.getUsed() + " | " + (int)newGeneration.getCommitted() + " | " 
+		+ (int)newGeneration.getTotal() + "\n");
+	sb.append("[OldGen] " + (int)oldGeneration.getUsed() + " | " + (int)oldGeneration.getCommitted() + " | " 
+		+ (int)oldGeneration.getTotal() + "\n");
 	
 	return sb.toString();
     }
@@ -154,8 +200,44 @@ class HeapUsage implements Serializable {
 
     public float getCommitted() {
         return ((float)(committed - start)) / 1024 / 1024;
+    }  
+}
+
+class OOMHeapUsage implements Serializable {
+    private float used;
+    private float committed;
+    private float total;
+    
+    
+    public OOMHeapUsage(float used, float committed, float total) {
+	this.used = used;
+	this.committed = committed;
+	this.total = total;
     }
 
+    public void setUsed(float used) {
+        this.used = used;
+    }
+
+    public void setCommitted(float committed) {
+        this.committed = committed;
+    }
+
+    public void setTotal(float total) {
+        this.total = total;
+    }
+
+    public float getUsed() {
+        return used;
+    }
+
+    public float getCommitted() {
+        return committed;
+    }
+
+    public float getTotal() {
+        return total;
+    }
     
     
 }

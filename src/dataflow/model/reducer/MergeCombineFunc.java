@@ -1,12 +1,14 @@
 package dataflow.model.reducer;
 
+import java.text.DecimalFormat;
+
 public class MergeCombineFunc {
     
-    private long cCombineInputRecords;
+    private long cCombineInputRecords = -1;
 
-    private long cCombineOutputRecords;
+    private long cCombineOutputRecords = -1;
 
-    private long tCombineInputRecords;
+    private long tCombineInputRecords = -1;
 
     public long getcCombineInputRecords() {
 	return cCombineInputRecords;
@@ -30,6 +32,17 @@ public class MergeCombineFunc {
 
     public void settCombineInputRecords(long tCombineInputRecords) {
 	this.tCombineInputRecords = tCombineInputRecords;
+    }
+    
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+	DecimalFormat f = new DecimalFormat(",###");
+	
+	sb.append("[Combine input records]  " + f.format(cCombineInputRecords) 
+		+ " | " + f.format(tCombineInputRecords) + "\n");
+	sb.append("[Combine output records] " + f.format(cCombineOutputRecords) + "\n");
+	
+	return sb.toString();
     }
 
 }

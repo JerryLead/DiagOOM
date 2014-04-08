@@ -38,4 +38,46 @@ public class FullGCItem implements Serializable {
 	this.heapCurrent = heapCurrent;
 	this.heapCommitted = heapCommitted;
     }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
+    public float getNewGenBefore() {
+        return newGenBefore;
+    }
+
+    public float getOldGenBefore() {
+        return oldGenBefore;
+    }
+
+    public float getHeapBefore() {
+        return heapBefore;
+    }
+
+    public float getNewGenCurrent() {
+        return newGenCurrent;
+    }
+
+    public float getOldGenCurrent() {
+        return oldGenCurrent;
+    }
+
+    public float getHeapCurrent() {
+        return heapCurrent;
+    }
+
+    public float getNewGenCommitted() {
+        return newGenCommitted;
+    }
+
+    public float getOldGenCommitted() {
+        return oldGenCommitted;
+    }
+
+    public float getHeapCommitted() {
+        return heapCommitted;
+    }
+    
+    
 }

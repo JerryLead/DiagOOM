@@ -1,6 +1,7 @@
 package dataflow.model.mapper;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 public class MapFunc implements Serializable {
 
@@ -14,6 +15,18 @@ public class MapFunc implements Serializable {
 
     private long tmapInputBytes; // total "HDFS_BYTES_READ"
 
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+	DecimalFormat f = new DecimalFormat(",###");
+	
+	sb.append("[Map input bytes]    " + f.format(cmapInputBytes) + " | " + f.format(tmapInputBytes) + "\n");
+	sb.append("[Map input records]  " + f.format(cmapInputRecords) + "\n");
+	sb.append("[Map output records] " + f.format(cmapOutputRecords) + "\n");
+	sb.append("[Map output bytes]   " + f.format(cmapOutputBytes) + "\n");
+	
+	return sb.toString();
+    }
+    
     public long getCmapInputRecords() {
 	return cmapInputRecords;
     }

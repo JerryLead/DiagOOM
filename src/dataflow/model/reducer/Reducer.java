@@ -35,6 +35,35 @@ public class Reducer {
     private List<Segment> segmentsInReduceBuf;
     private ReduceFunc reduceFunc;
     
+    public String toString() {
+  	StringBuilder sb = new StringBuilder();
+
+  	sb.append("------------ RunningStatus ------------\n");
+  	sb.append("[taskId] " + taskId + "\n");
+  	sb.append("[RunningPhase] " + runningPhase + "\n");
+  	sb.append("[isInMemMergeRunning] " + isInMemMergeRunning + "\n\n");
+  	
+  	sb.append("------------ SegmentsInShuffle ------------\n");
+  	sb.append(segsInShuffle + "\n");
+  	
+  	if(mergeCombineFunc != null && mergeCombineFunc.getcCombineInputRecords() != -1) {
+  	    sb.append("------------ memCombine() ------------\n");
+  	    sb.append(mergeCombineFunc + "\n");
+  	}
+
+  	if(segmentsInReduceBuf != null) {
+  	    sb.append("-------- SegmentsInReduceBuf --------\n");
+  	    for(Segment seg : segmentsInReduceBuf)
+  		sb.append(seg + "\n");
+  	    sb.append("\n");
+  	}
+
+  	sb.append("------------ reduce() ------------\n");
+  	sb.append(reduceFunc + "\n");
+	
+  	return sb.toString();
+  	
+    }
     
     public Reducer(Configuration jobConfiguration) {
 	this.conf = jobConfiguration;

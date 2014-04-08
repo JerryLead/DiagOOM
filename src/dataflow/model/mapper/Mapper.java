@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import profile.commons.configuration.Configuration;
-import profile.commons.metrics.JvmUsage;
 import profile.mapper.Input;
 import profile.mapper.MapperBuffer;
 import profile.mapper.MapperCounters;
@@ -38,11 +37,52 @@ public class Mapper {
     private long physical_memory_bytes;
     private long total_committed_bytes;
 
+    
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+
+	sb.append("------------ RunningStatus ------------\n");
+	sb.append("[taskId] " + taskId + "\n");
+	sb.append("[RunningPhase] " + runningPhase + "\n");
+	sb.append("[is map() running] " + isMapRunning + "\n\n");
+	
+	sb.append("------------ map() ------------\n");
+	sb.append(mapFunc + "\n");
+	
+	sb.append("------------ SpillBuffer ------------\n");
+	sb.append(spillBuffer + "\n");
+	
+	if(memCombineFunc != null) {
+	    sb.append("----- memCombine() -----\n");
+	    sb.append(memCombineFunc);
+	    sb.append("\n");
+	}
+	
+	sb.append("------------ Spills ------------\n"); 
+	for(int i = 0; i < spills.size(); i++) {
+	    sb.append("[Spill " + i + "] " + spills.get(i) + "\n");
+	}
+	sb.append("\n");
+	
+	if(diskCombineFunc != null) {
+	    sb.append("------------ diskCombine() ------------\n");
+	    sb.append(diskCombineFunc + "\n");
+	    
+	}
+	
+	sb.append("------------ Segments ------------\n");
+	for(Segment seg : mapOutputSegs)
+	    sb.append(seg + "\n");
+	
+	return sb.toString();
+	
+    }
+    
     public Mapper(Configuration conf) {
 	this.conf = conf;
 	split = new InputSplit();
 	mapFunc = new MapFunc();
-	spillBuffer = new SpillBuffer();
+	spillBuffer = new SpillBuffer(conf);
 	this.hasReducer = conf.getMapred_reduce_tasks() == 0 ? false : true;
 	
 	if(conf.getMapreduce_combine_class() != null) 
@@ -66,9 +106,10 @@ public class Mapper {
 	split.setSplitBytes(input.getSplitBytes());
 	mapFunc.setTmapInputBytes(input.getSplitBytes());
     }
+   
     
     public void setSpillBuffer(MapperBuffer buffer) {
-	spillBuffer.setIoSortMB(conf.getIo_sort_mb());
+	// spillBuffer.setIoSortMB(conf.getIo_sort_mb());
 	spillBuffer.setDataBuffer(buffer.getSoftBufferLimit(), buffer.getKvbufferBytes());
 	spillBuffer.setRecordBuffer(buffer.getSoftRecordLimit(), buffer.getKvoffsetsLen());
     }
@@ -151,7 +192,7 @@ public class Mapper {
 	setMapFunc(counters);
     }
 
-    private void setMapFunc(MapperCounters c) {
+    public void setMapFunc(MapperCounters c) {
 	mapFunc.setCmapInputBytes(c.getHdfs_bytes_read());
 	mapFunc.setCmapInputRecords(c.getMap_input_records());
 	
@@ -215,6 +256,5 @@ public class Mapper {
     public Configuration getConf() {
 	return conf;
     }
-    
-    
+
 }

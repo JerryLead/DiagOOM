@@ -131,6 +131,6 @@ public class ReducerInfo implements Serializable {
   	
   	return sb.toString();
   	
-      }
+    }
       
 }
