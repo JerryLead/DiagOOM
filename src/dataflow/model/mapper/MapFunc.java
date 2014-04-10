@@ -15,6 +15,11 @@ public class MapFunc implements Serializable {
 
     private long tmapInputBytes; // total "HDFS_BYTES_READ"
 
+    
+    public long predictTotalInputRecords() {
+	return (long) ((double)tmapInputBytes / cmapInputBytes * cmapInputRecords);
+    }
+    
     public String toString() {
 	StringBuilder sb = new StringBuilder();
 	DecimalFormat f = new DecimalFormat(",###");

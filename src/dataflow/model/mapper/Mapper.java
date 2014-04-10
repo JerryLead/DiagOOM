@@ -82,8 +82,10 @@ public class Mapper {
 	this.conf = conf;
 	split = new InputSplit();
 	mapFunc = new MapFunc();
-	spillBuffer = new SpillBuffer(conf);
+	
 	this.hasReducer = conf.getMapred_reduce_tasks() == 0 ? false : true;
+	if(hasReducer)
+	    spillBuffer = new SpillBuffer(conf);
 	
 	if(conf.getMapreduce_combine_class() != null) 
 	    memCombineFunc = new MemCombineFunc();
@@ -135,6 +137,7 @@ public class Mapper {
 	if(memCombineFunc != null && info != null) {
 	    memCombineFunc.settCombineInputRecords(info.getRecordsBeforeCombine());
 	    
+	    memCombineFunc.setInputRecsInPreviousSpills(inputRecsInPreviousSpills);
 	    
 	    memCombineFunc.setcCombineInputRecords(counters.getCombine_input_records() - inputRecsInPreviousSpills);
 	    memCombineFunc.setcCombineOutputRecords(counters.getCombine_output_records() - outputRecsInPreviousSpills);
@@ -175,6 +178,8 @@ public class Mapper {
 		combineInputRecsInSpills += sp.getRecordsBefore();
 		combineOutputRecsInSpills += sp.getRecordsAfter();
 	    }
+	    
+	    diskCombineFunc.setInputRecsInPreviousMerges(inputRecsInPreviousMerges);
 	    
 	    diskCombineFunc.setcCombineInputRecords(counters.getCombine_input_records() 
 		    - combineInputRecsInSpills - inputRecsInPreviousMerges);

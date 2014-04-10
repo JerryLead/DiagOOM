@@ -13,21 +13,31 @@ import java.util.List;
 import java.util.Map;
 
 
+
 public class DumpedObjectsAnalyzer {
     // e.g., /Users/xulijie/Documents/DiagOOMSpace/PigMapJoin
     // mapFileBytesRead-48205824-pid-25687.md
-    // mapFileBytesRead-97026048-pid-25687.md
     // mapFileBytesRead-143392768-pid-25687.md
-    // mapFileBytesRead-182734848-pid-25687.md
-    // mapFileBytesRead-213135360-pid-25687.md
     // mapFileBytesRead-245886976-pid-25687.md
+
+    // mapInRecords-1000-pid-5602.md
+    // mapInRecords-2000-pid-5602.md
+    // mapInRecords-3000-pid-5602.md
     
-    // e.g., 48205824, 97026048, 143392768, 182734848, 213135360, 245886976
+    // dumpFiles ==> 
+    // 	[mapFileBytesRead], 48205824 
+    // 	[mapFileBytesRead], 143392768 
+    // 	[mapFileBytesRead], 245886976
+    // 	[mapInRecords], 1000
+    // 	[mapInRecords], 2000
+    // 	[mapInRecords], 3000 
+    
+    
     // Default: the last one represents OOM dump
     private List<SortedFile> dumpFiles;
     
     // e.g., mapFileBytesRead
-    private String counterName; 
+    // private String counterName; 
 
     // e.g, 48205824 ==> object1, object2, object3
    
@@ -51,11 +61,11 @@ public class DumpedObjectsAnalyzer {
 	    if(name.endsWith(".md")) {
 		long counter = Long.parseLong(name.substring(name.indexOf('-') + 1, name.indexOf("-pid")));
 		
-		dumpFiles.add(new SortedFile(counter, f));
+		dumpFiles.add(new SortedFile(name.substring(0, name.indexOf('-')), counter, f));
 		
-		if(counterName == null) {
-		    counterName = name.substring(0, name.indexOf('-'));
-		}			
+		// if(counterName == null) {
+		//     counterName = name.substring(0, name.indexOf('-'));
+		// }			
 	    }
 	}
 	
@@ -106,16 +116,14 @@ public class DumpedObjectsAnalyzer {
 		    parseFrameworkObjects(flines, isMap);
 		
 		//if(!ulines.isEmpty()) {
-		Map<String, UserObject> name_object = parseUserObjects(ulines);
+		Map<String, UserObject> name_object = parseUserObjects(f.getCounterName(), f.getCounter(), ulines);
 		parseThreadsCode(tlines, name_object);
 		//}
 		
 		reader.close();
 	    } catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    } catch (IOException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    }
 	}
@@ -147,7 +155,7 @@ public class DumpedObjectsAnalyzer {
 	    
 	    else {
 		if(flines.get(i).startsWith("| FrameworkObj")) {
-		    ++i;
+		    ++i; 
 		}
 		    
 		else if(flines.get(i).startsWith("|")) {
@@ -166,7 +174,7 @@ public class DumpedObjectsAnalyzer {
 	
     }
     
-    private Map<String, UserObject> parseUserObjects(List<String> ulines) {
+    private Map<String, UserObject> parseUserObjects(String counterName, long counter, List<String> ulines) {
 	List<UserObject> uObjs = new ArrayList<UserObject>();
 	Map<String, UserObject> name_object = new HashMap<String, UserObject>();
 	
@@ -181,7 +189,7 @@ public class DumpedObjectsAnalyzer {
 	    }
 	}
 	
-	userObjsPerDumpList.add(new UserObjectsPerDump(uObjs));
+	userObjsPerDumpList.add(new UserObjectsPerDump(counterName, counter, uObjs));
 	return name_object;
 	
     }
@@ -225,12 +233,13 @@ public class DumpedObjectsAnalyzer {
     }
     
     public void display() {
-	System.out.println("## Heap Dump [Counter = " + counterName + "]");
+	System.out.println("## Heap Dump");
 	
 	DecimalFormat format = new DecimalFormat(",###");
 	
 	for(int i = 0; i < dumpFiles.size(); i++) {
-	    System.out.println("### Dump " + i + " [" + counterName + " = " + format.format(dumpFiles.get(i).getCounter()) + "]");
+	    System.out.println("### Dump " + i + " [" + dumpFiles.get(i).getCounterName() 
+		    + " = " + format.format(dumpFiles.get(i).getCounter()) + "]");
 	    
 	    UserObjectsPerDump uDump = userObjsPerDumpList.get(i);
 	    uDump.display();
@@ -257,8 +266,8 @@ public class DumpedObjectsAnalyzer {
 	if(!segments.isEmpty()) {
 	    System.out.println("#### Segments\n");
 	    
-	    System.out.println("| Location \t | FrameworkObj \t| Inner object \t| shallowHeap \t| retainedHeap \t| taskId \t|");
-	    System.out.println("| :----------- | :----------- | :----------- | -----------: | -----------: | -----------: |");
+	    System.out.println("| Location \t | FrameworkObj \t| Inner object \t| retainedHeap \t| taskId \t|");
+	    System.out.println("| :----------- | :----------- | :----------- | -----------: | -----------: |");
 		
 	    for(SegmentObj sObj : segments) {
 		System.out.println(sObj);
@@ -269,6 +278,28 @@ public class DumpedObjectsAnalyzer {
 	
     }
     
+    
+    public List<UserObjectsPerDump> getUserObjsPerDumpList() {
+        return userObjsPerDumpList;
+    }
+
+    public List<BufferObject> getBufferObjs() {
+        return bufferObjs;
+    }
+
+    public List<SegmentObj> getSegments() {
+        return segments;
+    }
+
+    public List<Long> getInputRecordsPerDumpList() {
+	List<Long> inputRecordsPerDumpList = new ArrayList<Long>();
+	
+	for(SortedFile sf : dumpFiles) 
+	    inputRecordsPerDumpList.add(sf.getCounter());
+	
+   	return inputRecordsPerDumpList;
+    }
+    
     public static void main(String[] args) {
 	// String dir = "/Users/xulijie/Documents/DiagOOMSpace/PigMapJoin";
 	String dir = "/Users/xulijie/Documents/DiagOOMSpace/reducerTest";
@@ -276,23 +307,28 @@ public class DumpedObjectsAnalyzer {
 	DumpedObjectsAnalyzer analyzer = new DumpedObjectsAnalyzer(dir);
 	analyzer.parseEachDump();
 	analyzer.display();
-    }
-
-    
+    }  
 }
 
 
 class SortedFile implements Comparable<SortedFile> {
+    private String counterName;
     private long counter;
     private File file;
     
-    public SortedFile(long counter, File file) {
+    public SortedFile(String counterName, long counter, File file) {
+	this.counterName = counterName;
 	this.counter = counter;
 	this.file = file;
     }
 
     @Override
     public int compareTo(SortedFile o) {
+	if(this.counterName.compareTo(o.getCounterName()) < 0) 
+	    return 1;
+	else if(this.counterName.compareTo(o.getCounterName()) > 0)
+	    return -1;
+	    
 	if(this.counter < o.counter)
 	    return -1;
 	else if(this.counter > o.counter)
@@ -306,5 +342,13 @@ class SortedFile implements Comparable<SortedFile> {
 
     public File getFile() {
         return file;
+    }
+    
+    public String getCounterName() {
+	return counterName;
+    }
+    
+    public String toString() {
+	return "[" + counterName + "] " + counter;
     }
 }

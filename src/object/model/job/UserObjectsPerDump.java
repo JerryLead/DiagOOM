@@ -4,16 +4,33 @@ import java.util.List;
 
 public class UserObjectsPerDump {
 
+    String counterName;
+    long counter;
+    
     List<UserObject> userObjs;
     
     
-    public UserObjectsPerDump(List<UserObject> uObjs) {
+    public UserObjectsPerDump(String counterName, long counter, List<UserObject> uObjs) {
+	this.counterName = counterName;
+	this.counter = counter;
 	this.userObjs = uObjs;
     }
 
 
     public List<UserObject> getUesrObjects() {
 	return userObjs;
+    }
+    
+    public String getCounterName() {
+	return counterName;
+    }
+    
+    public long getCounter() {
+	return counter;
+    }
+    
+    public void setCounter(long counter) {
+	this.counter = counter;
     }
     
     public void display() {
@@ -24,7 +41,7 @@ public class UserObjectsPerDump {
 	System.out.println("|:------------| ------------:| -------------:| ------:|:------------ | ----------:| :------ | :------|");
 	
 	for(UserObject userObj : userObjs) {
-		userObj.display();
+	    userObj.display();
 	}
     }
     

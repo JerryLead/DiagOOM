@@ -10,6 +10,8 @@ public class DiskCombineFunc {
 
     private long tCombineInputRecords = -1;
 
+    private long inputRecsInPreviousMerges = -1;
+
     public long getcCombineInputRecords() {
 	return cCombineInputRecords;
     }
@@ -33,6 +35,15 @@ public class DiskCombineFunc {
     public void settCombineInputRecords(long tCombineInputRecords) {
 	this.tCombineInputRecords = tCombineInputRecords;
     }
+    
+    public void setInputRecsInPreviousMerges(long inputRecsInPreviousMerges) {
+	this.inputRecsInPreviousMerges  = inputRecsInPreviousMerges;
+	
+    }
+
+    public long getInputRecsInPreviousMerges() {
+        return inputRecsInPreviousMerges;
+    }
 
     public String toString() {
 	StringBuilder sb = new StringBuilder();
@@ -43,4 +54,8 @@ public class DiskCombineFunc {
 	
 	return sb.toString();
     }
+
+
+    
+    
 }

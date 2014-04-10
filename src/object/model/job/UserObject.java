@@ -70,6 +70,10 @@ public class UserObject {
 	this.stackFrame = stackFrame;
 	
     }
+    
+    public String getCode() {
+	return code;
+    }
 
     public void display() {
 	DecimalFormat format = new DecimalFormat(",###");

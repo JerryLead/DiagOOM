@@ -10,6 +10,7 @@ public class MemCombineFunc {
 
     private long tCombineInputRecords = -1;
 
+    private long inputRecsInPreviousSpills = -1;
 
     public long getcCombineInputRecords() {
 	return cCombineInputRecords;
@@ -33,6 +34,15 @@ public class MemCombineFunc {
 
     public void settCombineInputRecords(long tCombineInputRecords) {
 	this.tCombineInputRecords = tCombineInputRecords;
+    }
+    
+    public void setInputRecsInPreviousSpills(long inputRecsInPreviousSpills) {
+	this.inputRecsInPreviousSpills = inputRecsInPreviousSpills;
+	
+    }
+
+    public long getInputRecsInPreviousSpills() {
+        return inputRecsInPreviousSpills;
     }
     
     public String toString() {

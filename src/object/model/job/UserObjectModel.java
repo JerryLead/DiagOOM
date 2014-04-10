@@ -1,5 +1,7 @@
 package object.model.job;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,30 +49,90 @@ public class UserObjectModel {
     private List<Long> inputRecordsPerDumpList;
     private List<UserObjectsPerDump> userObjsPerDumpList;
     
-    private List<SizeModel> objectModelList;
+    // each object has a size model
+    private List<SizeModel> objectSizeModelList;
     
     private Map<String, Integer> objectName_index = new HashMap<String, Integer>();
     
-    public void invertObject() {
+    private String function;
+    
+    public UserObjectModel(List<Long> inputRecordsPerDumpList, List<UserObjectsPerDump> userObjsPerDumpList) {
+	this.inputRecordsPerDumpList = inputRecordsPerDumpList;
+	this.userObjsPerDumpList = userObjsPerDumpList;
+	
+	this.objectSizeModelList = new ArrayList<SizeModel>();
+    }
+    
+    public UserObjectModel(List<UserObjectsPerDump> userObjsPerDumpList, String function) {
+	inputRecordsPerDumpList = new ArrayList<Long>();
+	for(UserObjectsPerDump dump : userObjsPerDumpList)
+	    inputRecordsPerDumpList.add(dump.getCounter());
+	
+	this.userObjsPerDumpList = userObjsPerDumpList;
+	
+	this.objectSizeModelList = new ArrayList<SizeModel>();
+	
+	this.function = function;
+    }
+    
+    
+    public void buildModel() {
+	invertObjects();
+	if(objectSizeModelList != null) {
+	    for(SizeModel model : objectSizeModelList) 
+		model.buildModel();
+	}
+	
+    }
+    
+    public void invertObjects() {
 	for(int i = 0; i < inputRecordsPerDumpList.size(); i++) {
 	    long record = inputRecordsPerDumpList.get(i);
 	    UserObjectsPerDump objects = userObjsPerDumpList.get(i);
 	    
 	    for(UserObject obj : objects.getUesrObjects()) {
 		
-		if(!objectName_index.containsKey(obj.getObjectName())) {
-		    SizeModel model = new SizeModel();
-		    model.add(record, obj);
-		    objectModelList.add(model);
-		    objectName_index.put(obj.getObjectName(), objectModelList.size() - 1);
+		if(obj.getCode().equals(function)) {
+		    if(!objectName_index.containsKey(obj.getObjectName())) {
+			SizeModel model = new SizeModel(obj.getObjectName());
+			model.add(record, obj);
+			objectSizeModelList.add(model);
+			objectName_index.put(obj.getObjectName(), objectSizeModelList.size() - 1);
+		    }
+		    else {
+			int index = objectName_index.get(obj.getObjectName());
+			SizeModel model = objectSizeModelList.get(index);
+			model.add(record, obj);
+		    }
 		}
-		else {
-		    int index = objectName_index.get(obj.getObjectName());
-		    SizeModel model = objectModelList.get(index);
-		    model.add(record, obj);
-		}
+		
 	    }
 	}
+    }
+
+
+    public void display() {
+	System.out.println("### Object Size Model in " + function + "()");
+	if(objectSizeModelList != null) {
+	    for(SizeModel model : objectSizeModelList) 
+		model.display();
+	}
+    }
+
+
+    public void predict(long inputRecords) {
+	System.out.println("| UserObject | Estimated Bytes | Total counter |");
+	System.out.println("|:----------|--------:|--------:|");
+	
+	DecimalFormat f = new DecimalFormat(",###");
+	 
+	for(SizeModel model : objectSizeModelList) {
+	    long totalObjBytes = model.predict(inputRecords);
+	    System.out.println("| " + model.getUserObjName() + " | " + f.format(totalObjBytes) 
+		    + " | " + f.format(inputRecords) + " |");
+	}
+	
+	System.out.println();
     }
     
 }

@@ -10,6 +10,8 @@ public class MergeCombineFunc {
 
     private long tCombineInputRecords = -1;
 
+    private long inputRecsInPreviousMerges = -1;
+    
     public long getcCombineInputRecords() {
 	return cCombineInputRecords;
     }
@@ -43,6 +45,14 @@ public class MergeCombineFunc {
 	sb.append("[Combine output records] " + f.format(cCombineOutputRecords) + "\n");
 	
 	return sb.toString();
+    }
+
+    public void setInputRecsInPreviousMerges(long inputRecsInPreviousMerges) {
+	this.inputRecsInPreviousMerges = inputRecsInPreviousMerges;
+    }
+    
+    public long getInputRecsInPreviousMerges() {
+	return inputRecsInPreviousMerges;
     }
 
 }

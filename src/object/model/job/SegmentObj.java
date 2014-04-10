@@ -70,7 +70,7 @@ public class SegmentObj {
     
     public String toString() {
 	DecimalFormat format = new DecimalFormat(",###");
-	return "| " + location + "\t| " + name + "\t| " + innerObject + "\t| " + format.format(shallowHeap) + "\t| " 
+	return "| " + location + "\t| " + name + "\t| " + innerObject + "\t| "
 		+ format.format(retainedHeap) + "\t| " + taskId + "\t|";	
     }
     

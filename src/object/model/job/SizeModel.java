@@ -8,6 +8,10 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 public class SizeModel {
 
+    private boolean isCounterRecord;
+    
+    private String userObjName;
+    private String counterName;
     private List<Long> inputRecords;
     private List<UserObject> userObjs;
     
@@ -20,11 +24,33 @@ public class SizeModel {
     private float pearsonCorr;
     
     // Number of inner object / number of input records
-    private float innerObjNumPerRecord;
+    private float innerObjNumPerRecord = -1;
 
-    public SizeModel() {
+    public SizeModel(String userObjName) {
+	this.userObjName = userObjName;
 	inputRecords = new ArrayList<Long>();
 	userObjs = new ArrayList<UserObject>();
+    }
+    
+    public void add(long record, UserObject obj) {
+	inputRecords.add(record);
+	userObjs.add(obj);
+	
+    }
+    // mapInRecords | mapFileBytesRead | mCombInRecords | rCombInRecords | redInRecords | redInGroups | redFileBytesRead 
+
+    public void buildModel() {
+	if(counterName.equals("mapFileBytesRead") || counterName.equals("redFileBytesRead")) {
+	    isCounterRecord = false;
+	    computeCorrelation();
+	    regression();
+	}
+	else {
+	    isCounterRecord = true;
+	    computeInnerObjNumPerRecord();
+	    computeCorrelation();
+	    regression();    
+	}
     }
     
     public void computeInnerObjNumPerRecord() {
@@ -85,6 +111,37 @@ public class SizeModel {
 	}
     }
     
+    public void display() {
+	
+	String objectName = userObjs.get(0).getObjectName();
+	
+	System.out.println("----------------- " + objectName + " -----------------");
+	
+	if(innerObjNumPerRecord != -1) {
+	    System.out.println("Count(inner obj of" + objectName + ") / Count(" + counterName + ") = " + innerObjNumPerRecord);
+	}
+	
+	System.out.println("[Pearson correlation] " + pearsonCorr);
+	
+	// bytes = intercept + slope * records
+	if(isCounterRecord)
+	    System.out.println("Bytes(" + objectName + ") = " + intercept + " + " + slope + " * Count(" + counterName + ")");
+	else
+	    System.out.println("Bytes(" + objectName + ") = " + intercept + " + " + slope + " * Bytes(" + counterName + ")");
+	System.out.println();
+    }
+    
+
+
+    public long predict(long inputRecords) {
+	long totalObjBytes = (long) (intercept + slope * inputRecords);
+	return totalObjBytes;
+    }
+    
+    public String getUserObjName() {
+	return userObjName;
+    }
+    
     public static void main(String[] args) {
 	double[] record = {48205824, 97026048, 143392768, 182734848, 213135360, 252739584};
 	double[] bytes = {308047792, 493580976, 729236672, 933534024, 1060080912, 1221451504};
@@ -94,11 +151,6 @@ public class SizeModel {
 	
 	System.out.println(new PearsonsCorrelation().correlation(record, len));
     }
-    
-    public void add(long record, UserObject obj) {
-	inputRecords.add(record);
-	userObjs.add(obj);
-	
-    }
+
 
 }

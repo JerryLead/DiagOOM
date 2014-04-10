@@ -31,7 +31,7 @@ public class Reducer {
     private SegmentsInShuffle segsInShuffle;
   
     private MergeCombineFunc mergeCombineFunc;
-    private List<OnDiskSeg> onDiskSegs;
+    //private List<OnDiskSeg> onDiskSegs;
     private List<Segment> segmentsInReduceBuf;
     private ReduceFunc reduceFunc;
     
@@ -128,6 +128,8 @@ public class Reducer {
 	    mergeCombineFunc.setcCombineInputRecords(counters.getCombine_input_records() - inputRecsInPreviousMerges);
 	    mergeCombineFunc.setcCombineOutputRecords(counters.getCombine_output_records() - outputRecsInPreviousMerges);
 	    
+	    mergeCombineFunc.setInputRecsInPreviousMerges(inputRecsInPreviousMerges);
+	    
 	}
     }
 
@@ -158,6 +160,22 @@ public class Reducer {
     public SegmentsInShuffle getSegsInShuffle() {
 	return segsInShuffle;
     }
+
+    public String getRunningPhase() {
+        return runningPhase;
+    }
+
+    public boolean isInMemMergeRunning() {
+        return isInMemMergeRunning;
+    }
    
+    public MergeCombineFunc getMergeCombineFunc() {
+	return mergeCombineFunc;
+    }
+
+    public ReduceFunc getReduceFunc() {
+        return reduceFunc;
+    }
+    
     
 }

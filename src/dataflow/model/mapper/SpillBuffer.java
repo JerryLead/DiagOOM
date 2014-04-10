@@ -21,6 +21,7 @@ public class SpillBuffer {
 
     
     public SpillBuffer(Configuration conf) {
+
 	// float spillper = conf.getIo_sort_spill_percent();
 	float recper = conf.getIo_sort_record_percent();
 	this.io_sort_mb = conf.getIo_sort_mb();
@@ -35,7 +36,6 @@ public class SpillBuffer {
 	//each kvoffsets/kvindices is a integer, kvindices has three elements while kvoffsets has only one
 	this.kvoffsets = recordCapacity; 
 	this.kvindices = recordCapacity * 3;
-
     }
     
     public String toString() {
@@ -84,7 +84,27 @@ public class SpillBuffer {
     
     public void setIoSortMB(int io_sort_mb) {
 	this.io_sort_mb = io_sort_mb;
-	
-	
     }
+
+    public int getIo_sort_mb() {
+        return io_sort_mb;
+    }
+
+    public void setIo_sort_mb(int io_sort_mb) {
+        this.io_sort_mb = io_sort_mb;
+    }
+
+    public long getKvbuffer() {
+        return kvbuffer;
+    }
+
+    public long getKvindices() {
+        return kvindices;
+    }
+
+    public long getKvoffsets() {
+        return kvoffsets;
+    }
+    
+    
 }
