@@ -114,10 +114,10 @@ public class MapperObjectModel {
     
     private void computeRealCombineInputRecords(List<UserObjectsPerDump> combineObjsList) {
 	if(runningPhase.equals("spill")) {
-	    long inputRecsInPreviousSpills = mapper.getMemCombineFunc().getInputRecsInPreviousSpills();
+	    long startInputRecord = mapper.getMemCombineFunc().getStartInputRecord();
 	    
 	    for(UserObjectsPerDump objsPerDump : combineObjsList) 
-		objsPerDump.setCounter(objsPerDump.getCounter() - inputRecsInPreviousSpills);
+		objsPerDump.setCounter(objsPerDump.getCounter() - startInputRecord);
 	    
 	}
 	else {

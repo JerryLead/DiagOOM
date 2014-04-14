@@ -3,8 +3,10 @@ package profile.profiler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 
 import profile.job.JobProfile;
 import profile.job.JobTasksParser;
@@ -85,21 +87,72 @@ public class SingleJobProfiler {
     }
 
     public static void main(String[] args) {
-	String jobId = "job_201404061331_0008";
-	String oomTaskId = "attempt_201403211644_0007_m_000000_0";
+	String jobId = "job_201404141640_0002";
+	String oomTaskId = "attempt_201404141640_0002_m_000002_0";
 	
 	String hostname = "master";
-	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/Test/";
+	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/Count-distinct-mapper/heapdump-oom-job/serialized";
 
 	SingleJobProfiler profiler = new SingleJobProfiler(hostname, jobId);
 
 	JobProfile job = profiler.profile();
 	
-	System.out.println("## Mapper");
-	System.out.println(job.getMapperInfoList().get(0));
-	System.out.println("\n## Reducer");
-	System.out.println(job.getReducerInfoList().get(0));
+	outputDataflowInfo(serializeDir, job, oomTaskId);
 	
 	serialize(serializeDir, job, jobId);
+    }
+
+    private static void outputDataflowInfo(String serializeDir, JobProfile job, String oomTaskId) {
+	
+	int mapperoomId = -1;
+	int reduceroomId = -1;
+	
+	if(oomTaskId != null) {
+	    if(oomTaskId.contains("_m_"))
+		mapperoomId = Integer.parseInt(oomTaskId.substring(oomTaskId.indexOf("_m_") + 3, oomTaskId.lastIndexOf('_')));
+	    else if(oomTaskId.contains("_r_"))
+		reduceroomId = Integer.parseInt(oomTaskId.substring(oomTaskId.indexOf("_r_") + 3, oomTaskId.lastIndexOf('_')));
+	}
+	
+	if(oomTaskId == null)
+	    oomTaskId = "mapper-0-reducer-0";
+	
+	File jobFile = new File(serializeDir, oomTaskId + ".txt");
+	if (!jobFile.getParentFile().exists())
+	    jobFile.getParentFile().mkdirs();
+
+	if(mapperoomId == -1 && reduceroomId == -1) {
+	    mapperoomId = 0;
+	    reduceroomId = 0;
+	}
+	
+	try {
+	    PrintWriter writer = new PrintWriter(new FileWriter(jobFile));
+	    
+	    for(MapperInfo mapperInfo : job.getMapperInfoList()) {
+		
+		String taskId = mapperInfo.getTaskId();
+		int id = Integer.parseInt(taskId.substring(taskId.indexOf("_m_") + 3, taskId.lastIndexOf('_')));
+		
+		if(id == mapperoomId) 
+		    writer.println("## Mapper\n" + mapperInfo);
+	    }
+	    
+	    for(ReducerInfo reducerInfo : job.getReducerInfoList()) {
+		
+		String taskId = reducerInfo.getTaskId();
+		int id = Integer.parseInt(taskId.substring(taskId.indexOf("_r_") + 3, taskId.lastIndexOf('_')));
+		
+		if(id == reduceroomId) 
+		    writer.println("## Reducer\n" + reducerInfo);
+	    }
+	    
+	    writer.close();
+	    
+	} catch (FileNotFoundException e) {    
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
     }
 }

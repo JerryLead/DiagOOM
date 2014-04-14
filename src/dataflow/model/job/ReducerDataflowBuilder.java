@@ -1,6 +1,7 @@
 package dataflow.model.job;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import profile.job.JobProfile;
@@ -26,6 +27,8 @@ public class ReducerDataflowBuilder {
 	    
 	    reducers.add(reducer);
 	}
+	
+	Collections.sort(reducers);
 	
 	return reducers;
     }

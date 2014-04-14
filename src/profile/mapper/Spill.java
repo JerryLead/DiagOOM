@@ -12,6 +12,7 @@ public class Spill implements Serializable {
 
     private List<SpillInfo> spillInfoList = new ArrayList<SpillInfo>();
 
+    private MemCombine currentCombine;
     /* // add spill infos
     public void addSpillItem(boolean hasCombine, String reason,
 	    long recordsBeforeCombine, long bytesBeforeSpill,
@@ -58,5 +59,15 @@ public class Spill implements Serializable {
 		rawLength, compressedLength);
 	
     }
+
+    public MemCombine getCurrentCombine() {
+        return currentCombine;
+    }
+
+    public void setCurrentCombine(MemCombine currentCombine) {
+        this.currentCombine = currentCombine;
+    }
+    
+    
 
 }

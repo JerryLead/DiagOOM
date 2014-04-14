@@ -16,7 +16,7 @@ import dataflow.model.mapper.Mapper;
 import dataflow.model.mapper.Segment;
 
 
-public class Reducer {
+public class Reducer implements Comparable<Reducer> {
 
     // e.g., attempt_201404012254_0001_r_000000_0
     private String taskId;
@@ -175,6 +175,19 @@ public class Reducer {
 
     public ReduceFunc getReduceFunc() {
         return reduceFunc;
+    }
+    
+    public int getId() {
+	return id;
+    }
+
+    @Override
+    public int compareTo(Reducer o) {
+	if(this.id < o.getId())
+	    return -1;
+	else if(this.id > o.getId())
+	    return 1;
+	return 0;
     }
     
     

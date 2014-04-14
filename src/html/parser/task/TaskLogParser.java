@@ -6,7 +6,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import profile.mapper.MapperInfo;
+import profile.mapper.MemCombine;
 import profile.reducer.ReducerInfo;
+import profile.reducer.ShuffleCombine;
 import html.util.HtmlFetcher;
 
 public class TaskLogParser {
@@ -102,6 +104,21 @@ public class TaskLogParser {
 		mapper.getSpill().addBeforeSpillItem(reason, numbers[0], numbers[1]);
 	
 		mapper.setRunningPhase("spill");
+	    }
+	    
+	    else if (syslog[i].contains("[Start combine() in spill")) {
+		int spillNum = Integer.parseInt(syslog[i].substring(syslog[i].indexOf("spill") + 6, syslog[i].indexOf(']')));
+		int partitionId = Integer.parseInt(syslog[i].substring(syslog[i].indexOf("partition") + 10, syslog[i].lastIndexOf(']')));
+		
+		String valueStr = syslog[i].substring(syslog[i].indexOf('<'));
+		long[] numbers = extractLongNumber(valueStr, 3);
+		
+		long currentCombineInputRecords = numbers[0];
+		long totalRecord = numbers[1];
+		long currentCombineOutputRecords = numbers[2];
+		
+		mapper.getSpill().setCurrentCombine(new MemCombine(spillNum, 
+			partitionId, currentCombineInputRecords, totalRecord, currentCombineOutputRecords));
 	    }
 
 	    else if (syslog[i].contains("Finished spill")) {
@@ -354,7 +371,23 @@ public class TaskLogParser {
 		String idStr = syslog[i].substring(syslog[i].indexOf('(') + 1, syslog[i].lastIndexOf(')'));
 		String[] taskIds = idStr.split(", ");
 		reducer.getMergeInShuffle().addShuffleBeforeMergeItem(taskIds);
+		
+		String valueStr = syslog[i].substring(syslog[i].indexOf('<'));
+		long[] numbers = extractLongNumber(valueStr, 2);
+		
+		long currentCombineInputRecords = numbers[0];
+		long currentCombineOutputRecords = numbers[1];
+		
+		int[] segMapperIds = new int[taskIds.length];
+		for(int q = 0; q < segMapperIds.length; q++)
+		    segMapperIds[q] = Integer.parseInt(taskIds[q]);
+		
+		reducer.getMergeInShuffle().setCurrentCombine(new ShuffleCombine(segMapperIds, 
+			currentCombineInputRecords, currentCombineOutputRecords));
+		
 		reducer.setInMemMergeRunning(true);
+		
+		
 
 	    }
 

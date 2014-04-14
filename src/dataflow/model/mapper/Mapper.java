@@ -7,13 +7,14 @@ import profile.commons.configuration.Configuration;
 import profile.mapper.Input;
 import profile.mapper.MapperBuffer;
 import profile.mapper.MapperCounters;
+import profile.mapper.MemCombine;
 import profile.mapper.Merge;
 import profile.mapper.MergeInfo;
 import profile.mapper.Spill;
 import profile.mapper.SpillInfo;
 
 
-public class Mapper {
+public class Mapper implements Comparable<Mapper> {
 
     // e.g., attempt_201403211644_0002_m_000013_0
     private String taskId;
@@ -134,6 +135,7 @@ public class Mapper {
 	 
 	}
 	
+	/*
 	if(memCombineFunc != null && info != null) {
 	    memCombineFunc.settCombineInputRecords(info.getRecordsBeforeCombine());
 	    
@@ -146,6 +148,17 @@ public class Mapper {
 		 memCombineFunc.setcCombineInputRecords(info.getRecordsBeforeCombine());
 		 memCombineFunc.setcCombineOutputRecords(info.getRecordsAfterCombine());
 	    }
+	}
+	*/
+	if(memCombineFunc != null && spill.getCurrentCombine() != null) {
+	    MemCombine func = spill.getCurrentCombine();
+	    
+	    memCombineFunc.setcCombineInputRecords(counters.getCombine_input_records() - func.getStartInputRecord());
+	    memCombineFunc.setcCombineOutputRecords(counters.getCombine_output_records() - func.getCurrentCombineOutputRecords());
+	    memCombineFunc.setPartitionId(func.getPartitionId());
+	    memCombineFunc.setSpillNum(func.getSpillNum());
+	    memCombineFunc.setStartInputRecord(func.getStartInputRecord());
+	    memCombineFunc.settCombineInputRecords(func.getTotalRecord());
 	}
     }
     
@@ -260,6 +273,19 @@ public class Mapper {
 
     public Configuration getConf() {
 	return conf;
+    }
+    
+    public int getId() {
+	return id;
+    }
+
+    @Override
+    public int compareTo(Mapper o) {
+	if(this.id < o.getId())
+	    return -1;
+	else if(this.id > o.getId())
+	    return 1;
+	return 0;
     }
 
 }

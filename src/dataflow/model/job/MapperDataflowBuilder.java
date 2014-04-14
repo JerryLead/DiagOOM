@@ -1,6 +1,7 @@
 package dataflow.model.job;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import dataflow.model.mapper.Mapper;
@@ -26,6 +27,7 @@ public class MapperDataflowBuilder {
 	    mappers.add(mapper);
 	}
 	
+	Collections.sort(mappers);
 	return mappers;
     }
 
