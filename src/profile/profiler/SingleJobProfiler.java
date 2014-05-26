@@ -87,11 +87,13 @@ public class SingleJobProfiler {
     }
 
     public static void main(String[] args) {
-	String jobId = "job_201404141640_0002";
-	String oomTaskId = "attempt_201404141640_0002_m_000002_0";
+	String jobId = "job_201404282052_0002";
+	String oomTaskId = "attempt_201404282052_0002_m_000000_0";
 	
 	String hostname = "master";
-	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/Count-distinct-mapper/heapdump-oom-job/serialized";
+	
+	String serializeDir = "/Users/xulijie/Documents/OOMCases/Mahout-classifier/first-oom-job/serialized";
+	//String serializeDir = "/Users/xulijie/Documents/OOMCases/CooccurMatrix/heapdump-oom-job/serialized";
 
 	SingleJobProfiler profiler = new SingleJobProfiler(hostname, jobId);
 
@@ -139,12 +141,13 @@ public class SingleJobProfiler {
 	    }
 	    
 	    for(ReducerInfo reducerInfo : job.getReducerInfoList()) {
+		if(reducerInfo != null) {
+		    String taskId = reducerInfo.getTaskId();
+		    int id = Integer.parseInt(taskId.substring(taskId.indexOf("_r_") + 3, taskId.lastIndexOf('_')));
 		
-		String taskId = reducerInfo.getTaskId();
-		int id = Integer.parseInt(taskId.substring(taskId.indexOf("_r_") + 3, taskId.lastIndexOf('_')));
-		
-		if(id == reduceroomId) 
-		    writer.println("## Reducer\n" + reducerInfo);
+		    if(id == reduceroomId) 
+			writer.println("## Reducer\n" + reducerInfo);
+		}
 	    }
 	    
 	    writer.close();

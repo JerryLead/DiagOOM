@@ -1,5 +1,6 @@
 package object.model.job;
 
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 
 public class UserObject {
@@ -75,7 +76,7 @@ public class UserObject {
 	return code;
     }
 
-    public void display() {
+    public String toString() {
 	DecimalFormat format = new DecimalFormat(",###");
 	//System.out.println("| User object | shallow heap | retained heap | length | inner object | inner size | threads | code() |");
 	StringBuilder sb = new StringBuilder("| " + objectName + " | " + format.format(shallowHeap)
@@ -85,7 +86,7 @@ public class UserObject {
 	sb.append(thread + " | " + code + " |");	
 	//sb.append(objId + " |");
 	
-	System.out.println(sb.toString());
+	return sb.toString();
 	
     }
 }

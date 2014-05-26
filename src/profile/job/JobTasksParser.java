@@ -38,7 +38,7 @@ public class JobTasksParser {
     private static void initReduceTasksList(LinksSaver linksSaver) {
 	String jobtaskUrl = linksSaver.getReduce_jobtasks_jsp();
 	Document jobtaskDoc = HtmlFetcher.getHtml(jobtaskUrl);
-	if (jobtaskDoc.getElementsByTag("tbody") == null)
+	if (jobtaskDoc.getElementsByTag("tbody") == null || jobtaskDoc.getElementsByTag("tbody").isEmpty())
 	    return;
 	Elements reduceTrs = jobtaskDoc.getElementsByTag("tbody").first()
 		.children();

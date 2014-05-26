@@ -22,9 +22,13 @@ public class ReduceTaskParser {
 	    }
 	}
 	*/
+	if(reduceDetails.getElementsByTag("tbody").isEmpty())
+	    return null;
 	Element tr = reduceDetails.getElementsByTag("tbody").first().child(1);
 
 	ReducerInfo reducer = new ReducerInfo();
+	
+	
 
 	String taskId = tr.child(0).text();
 	String machine = tr.child(1).text();

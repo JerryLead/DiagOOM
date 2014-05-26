@@ -17,6 +17,7 @@ public class JstatMetrics {
 	private float gCT = 0;
 	
 	public JstatMetrics(String dateStrSec) {
+	    if(dateStrSec.matches("[0-9]*"))
 		this.startTimeSec = Long.parseLong(dateStrSec);
 	}
 

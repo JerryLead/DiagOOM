@@ -1,5 +1,6 @@
 package object.model.job;
 
+import java.io.PrintWriter;
 import java.util.List;
 
 public class UserObjectsPerDump {
@@ -41,8 +42,22 @@ public class UserObjectsPerDump {
 	System.out.println("|:------------| ------------:| -------------:| ------:|:------------ | ----------:| :------ | :------|");
 	
 	for(UserObject userObj : userObjs) {
-	    userObj.display();
+	    System.out.println(userObj);
 	}
+    }
+
+
+    public void output(PrintWriter writer) {
+	if(userObjs == null || userObjs.isEmpty())
+	    return;
+	//System.out.println("### User Objects\n");
+	writer.println("| User object | shallow heap | retained heap | length | inner object | inner size | threads | code() |");
+	writer.println("|:------------| ------------:| -------------:| ------:|:------------ | ----------:| :------ | :------|");
+	
+	for(UserObject userObj : userObjs) {
+	    writer.println(userObj);
+	}
+	
     }
     
 }

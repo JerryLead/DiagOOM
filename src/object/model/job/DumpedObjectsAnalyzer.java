@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +61,8 @@ public class DumpedObjectsAnalyzer {
 	for(File f : directory.listFiles()) {
 	    String name = f.getName();
 	    if(name.endsWith(".md")) {
-		long counter = Long.parseLong(name.substring(name.indexOf('-') + 1, name.indexOf("-pid")));
+		long counter = Long.parseLong(name.substring(name.indexOf('-') + 1, 
+			name.indexOf("-", name.indexOf('-') + 1)));
 		
 		dumpFiles.add(new SortedFile(name.substring(0, name.indexOf('-')), counter, f));
 		
@@ -239,7 +242,8 @@ public class DumpedObjectsAnalyzer {
 	
 	for(int i = 0; i < dumpFiles.size(); i++) {
 	    System.out.println("### Dump " + i + " [" + dumpFiles.get(i).getCounterName() 
-		    + " = " + format.format(dumpFiles.get(i).getCounter()) + "]");
+		    + " = " + format.format(dumpFiles.get(i).getCounter()) + "]"  
+		    + " name = " + dumpFiles.get(i).getFile().getName());
 	    
 	    UserObjectsPerDump uDump = userObjsPerDumpList.get(i);
 	    uDump.display();
@@ -299,15 +303,85 @@ public class DumpedObjectsAnalyzer {
 	
    	return inputRecordsPerDumpList;
     }
+
+
+    private void output(String outputDir) {
+	
+	File file = new File(outputDir + File.separatorChar + "objectsInAllDumps.md");
+	
+	if (!file.getParentFile().exists())
+	    file.getParentFile().mkdirs();
+	
+	try {
+	    PrintWriter writer = new PrintWriter(new FileWriter(file));
+	    
+	    writer.println("## Heap Dump");
+		
+	    DecimalFormat format = new DecimalFormat(",###");
+		
+	    for (int i = 0; i < dumpFiles.size(); i++) {
+		writer.println("### Dump " + i + " ["
+			+ dumpFiles.get(i).getCounterName() + " = "
+			+ format.format(dumpFiles.get(i).getCounter()) + "]"
+			+ " name = " + dumpFiles.get(i).getFile().getName());
+
+		UserObjectsPerDump uDump = userObjsPerDumpList.get(i);
+		uDump.output(writer);
+		writer.println();
+	    }
+
+	    writer.println("### Framework objects");
+
+	    if (!bufferObjs.isEmpty()) {
+		writer.println("#### SpillBuffer\n");
+		writer.println("| FrameworkObj \t| Inner object \t| shallowHeap \t| retainedHeap \t|");
+		writer.println("| :----------- | :----------- | -----------: | -----------: |");
+
+		for (BufferObject bufferObj : bufferObjs) {
+		    writer.println(bufferObj);
+		}
+		writer.println();
+	    }
+
+	    writer.println();
+	    writer.println();
+
+	    if (!segments.isEmpty()) {
+		writer.println("#### Segments\n");
+
+		writer.println("| Location \t | FrameworkObj \t| Inner object \t| retainedHeap \t| taskId \t|");
+		writer.println("| :----------- | :----------- | :----------- | -----------: | -----------: |");
+
+		for (SegmentObj sObj : segments) {
+		    writer.println(sObj);
+		}
+		writer.println();
+	    }
+	    
+	    writer.println();
+	    writer.close();
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	
+	
+	
+	
+	
+    }  
+    
     
     public static void main(String[] args) {
 	// String dir = "/Users/xulijie/Documents/DiagOOMSpace/PigMapJoin";
-	String dir = "/Users/xulijie/Documents/DiagOOMSpace/reducerTest";
-	
+	String dir = "/Users/xulijie/Documents/OOMCases/CooccurMatrix/diagnosis/inMemObjects";
+	String outputDir = "/Users/xulijie/Documents/OOMCases/CooccurMatrix/diagnosis/objectAnalysis";
+		
 	DumpedObjectsAnalyzer analyzer = new DumpedObjectsAnalyzer(dir);
 	analyzer.parseEachDump();
 	analyzer.display();
-    }  
+	analyzer.output(outputDir);
+    }
 }
 
 
