@@ -11,7 +11,7 @@ import profile.job.JobProfile;
 public class JobProfileFromSerialization {
 
     public static void main(String[] args) {
-	String jobId = "job_201403261726_0001";
+	String jobId = "job_201503261726_0001";
 
 	String serializeDir = "/Users/xulijie/Documents/DiagOOMSpace/PigMapJoin/";
 
