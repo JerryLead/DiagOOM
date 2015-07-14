@@ -3,17 +3,17 @@
 Dataflow-centric memory analysis for *diagnosing the causes of OOM errors in MapReduce jobs*
 
 ## Requriements
-- [Our enhanced Hadoop-1.2.0](https://github.com/JerryLead/hadoop-1.2.0-enhanced),  which supports dumping heap dump at the i-th <k, v> record or <k, list(v)> group.
-- [Our enhanced Eclipse MAT](https://github.com/JerryLead/enhanced-Eclipse-MAT), which supports extract user objects and framework objects from the heap dump of map/reduce task.
+- [Our enhanced Hadoop-1.2.0](https://github.com/JerryLead/hadoop-1.2.0-enhanced),  which supports generating heap dump at the *i*-th <k, v> record or <k, list(v)> group.
+- [Our enhanced Eclipse MAT](https://github.com/JerryLead/enhanced-Eclipse-MAT), which supports extracting user objects and framework objects from the heap dump of map/reduce task.
 
 ## Usage
 1. Run Hadoop jobs.
-2. When OOM occurs in a job, please record the job id and failed task id.
+2. When OOM occurs in a job, please record the **job id** and failed **task id**.
 3. Run `profile.profiler.SingleJobProfiler.main()` to collect the logs, dataflow counters, and JVM heap usage.
 4. If the error doesn't occur in the user code, go to 7.
 5. Run `dataflow.model.job.JobDataflowModelBuilder.main()` to get additional dump configurations.
 6. Rerun the job with the configurations.
-7. collect the  the heap dumps from the cluster.
+7. Collect the  the heap dumps from the cluster.
 8. Run our `enhanced Eclipse MAT` to get the 'Framework objects@OOM' and  'User objects@record(i)'
 9. Run `object.model.job.DumpedObjectsAnalyzer.OOMAnalyzer.main()` to get the diagnosis report.
 
@@ -22,15 +22,15 @@ Dataflow-centric memory analysis for *diagnosing the causes of OOM errors in Map
 The following items list the results of error diagnosis on [InMemWordCount](http://puffsun.iteye.com/blog/1902837).
 
 
-### 1. Memory-consuming objects (obtained from the OOM heap dump)
+### 1. Memory-consuming objects 
 
-#### (a) Framework Objects:
+(a) Framework Objects:
 
 | Framework object | Object type	| RetainedHeap 	|
 | :----------- | :----------- | -----------: | -----------: |
 | kvbuffer (map buffer)	| byte[398458880] @ 0xc1800000 | 398,458,896 B	|
 
-#### (b) User Objects:
+ (b) User Objects:
 
 | User object |  Object type | RetainedHeap | Length | Referenced thread | code() |
 |:------------|  -------------:| -------------:| ------:|:------------ | ----------:| :------ | :------|
@@ -106,9 +106,9 @@ Quantified relationship between user objects and input data in *map*():
 ![](figures/InMemWordCount.png)
 
 Symptoms => Causes:
- - PearsonCorrelation = 0.99 => Linear memory growth in [R1, R9651) => **Large map-level accumulated results** (i.e., wordCounter accmulates too many <word, count>s) => **Error-related data is [R1, R9651)** (i.e., all the input records of *map*())
- - Mo = 1.2 MB => Non sharp growth at R9651 => There is not large record-level intermediate restuls
- - R9651 = 151KB => Non large single record
+ - PearsonCorrelation = 0.99 => Linear memory growth in [R1, R9651) => **Large map-level accumulated results** (i.e., wordCounter accmulates too many \<word, count\>s) => **Error-related data is [R1, R9651)** (i.e., all the input records of *map*())
+ - Mo = 1.2 MB => No sharp growth at R9651 => There is not large record-level intermediate restuls
+ - R9651 = 151KB => No large single record
 
 
 ### 4. Improper job configurations
