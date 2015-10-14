@@ -1,21 +1,20 @@
-# DiagOOM 
+# Mprof
 
-Dataflow-centric memory analysis for *diagnosing the causes of OOM errors in MapReduce jobs*
+A Memory Profiler for Diagnosing Memory Problems in MapReduce Applications
 
 ## Requriements
 - [Our enhanced Hadoop-1.2.0](https://github.com/JerryLead/hadoop-1.2.0-enhanced),  which supports generating heap dump at the *i*-th <k, v> record or <k, list(v)> group.
-- [Our enhanced Eclipse MAT](https://github.com/JerryLead/enhanced-Eclipse-MAT), which supports extracting user objects and framework objects from the heap dump of map/reduce task.
+- [Our enhanced Eclipse MAT](https://github.com/JerryLead/enhanced-Eclipse-MAT), which supports extracting user objects and framework objects from the heap dump of the map/reduce task.
 
 ## Usage
 1. Run Hadoop jobs.
 2. When OOM occurs in a job, please record the **job id** and failed **task id**.
 3. Run `profile.profiler.SingleJobProfiler.main()` to collect the logs, dataflow counters, and JVM heap usage.
-4. If the error doesn't occur in the user code, go to 7.
-5. Run `dataflow.model.job.JobDataflowModelBuilder.main()` to get additional dump configurations.
-6. Rerun the job with the configurations.
-7. Collect the  the heap dumps from the cluster.
-8. Run our `enhanced Eclipse MAT` to get the 'Framework objects@OOM' and  'User objects@record(i)'
-9. Run `object.model.job.DumpedObjectsAnalyzer.OOMAnalyzer.main()` to get the diagnosis report.
+4. Run `dataflow.model.job.JobDataflowModelBuilder.main()` to get additional dump configurations.
+5. Rerun the job with the configurations.
+6. Collect the  the heap dumps from the cluster.
+7. Run our `enhanced Eclipse MAT` to get the 'Framework objects@OOM' and  'User objects@record(i)'
+8. Run `object.model.job.DumpedObjectsAnalyzer.OOMAnalyzer.main()` to get the diagnosis report.
 
 ## Results
 
