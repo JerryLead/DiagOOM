@@ -125,6 +125,29 @@ All the input records of *map*() => **Large input split size** (here, it is 512M
 
 
 
+### 5. Real-world OOM cases used for evaluation
+
+1. [NLPLemmatizer](http://stackoverflow.com/questions/20247185/java-lang-outofmemoryerror-on-running-hadoop-job)
+2. [InMemWordCount](http://puffsun.iteye.com/blog/1902837)
+3. [MapSideAggregation](http://stackoverflow.com/questions/16684712/out-of-memory-due-to-hash-maps-used-in-map-side-aggregation)
+4. [PigDistinctCount](http://mail-archives.apache.org/mod_mbox/pig-user/201105.mbox/%3CBANLkTi=Tnc8icJo48LKQDhEuT=jXBpD+oA@mail.gmail.com%3E)
+5. [CDHJob](http://stackoverflow.com/questions/13674190/cdh-4-1-error-running-child-java-lang-outofmemoryerror-java-heap-space)
+6. [MahoutBayes](http://stackoverflow.com/questions/10080800/outofmemory-error-when-running-the-wikipedia-bayes-example-on-mahout)
+7. [MahoutConvertText](http://stackoverflow.com/questions/22921936/mahout-exception-java-heap-space)
+8. [HashJoin](http://stackoverflow.com/questions/15316539/hadoop-mapper-over-consumption-of-memoryheap)
+9. [ShuffleInMemory](https://issues.apache.org/jira/browse/MAPREDUCE-5580)
+10. [Wordcount-like](http://stackoverflow.com/questions/19298357/out-of-memory-error-in-mapreduce-shuffle-phase)
+11. [PigJoin](http://stackoverflow.com/questions/17162679/pig-join-gets-outofmemoryerror-in-reducer-when-mapred-job-shuffle-input-buffer-p)
+12. [NestedDISTINCT](http://mail-archives.apache.org/mod_mbox/pig-user/201201.mbox/%3C4F174294.8090509@cern.ch%3E)
+13. [PigOrderLimit](https://mail-archives.apache.org/mod_mbox/pig-user/201201.mbox/%3CD570DEB688737C44A53497A16D0A7CAC0789B0@EAGF-ERFPMBX42.ERF.thomson.com%3E)
+14. [GraphPartitioner](http://stackoverflow.com/questions/12831076/oom-exception-in-hadoop-reduce-child)
+15. [FindFrequentValues](http://stackoverflow.com/questions/23042829/getting-java-heap-space-error-while-running-a-mapreduce-code-for-large-dataset)
+16. [ReduceJoin](http://stackoverflow.com/questions/15541900/why-does-the-last-reducer-stop-with-java-heap-error-during-merge-step)
+17. [PositionalIndexer](http://www.cs.cmu.edu/~lezhao/TA/2010/HW2/)
+18. [BuildInvertedIndex](http://stackoverflow.com/questions/17980491/building-inverted-index-exceed-the-java-heap-size)
+19. [CooccurMatrix](http://mail-archives.apache.org/mod_mbox/hadoop-common-user/201010.mbox/%3CAANLkTi=aNjiUezv-a9yFZpbXXWFsbjeKKyd2KmqCUAWc@mail.gmail.com%3E)
+20. [JoinLargeGroups](http://stackoverflow.com/questions/22281188/fail-to-join-large-groups)
+
 
 
 
