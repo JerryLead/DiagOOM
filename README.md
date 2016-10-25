@@ -151,8 +151,8 @@ All the input records of *map*() => **Large input split size** (here, it is 512M
 22. [GroupByOperator](https://issues.apache.org/jira/browse/HIVE-1139)
 23. [HashSetJoin](http://www.mikevalenty.com/hadoop-mapreduce-join-optimization-with-a-bloom-filter/)
 24. [ShuffleError](http://jason4zhu.blogspot.com/2014/11/shuffle-error-by-java-lang-out-of-memory-error-java-heap-space.html)
-25. [CollaborativeFiltering)(https://issues.apache.org/jira/browse/MAHOUT-1032)
-26. [CrawlDatum)(http://www.wangzhe.tech/MapReduce/MapReduce%E4%BB%BB%E5%8A%A1-java.lang.OutOfMemoryError%EF%BC%9AGC%20overhead%20limit%20exceeded/2016/08/09/)
+25. [CollaborativeFiltering](https://issues.apache.org/jira/browse/MAHOUT-1032)
+26. [CrawlDatum](http://www.wangzhe.tech/MapReduce/MapReduce%E4%BB%BB%E5%8A%A1-java.lang.OutOfMemoryError%EF%BC%9AGC%20overhead%20limit%20exceeded/2016/08/09/)
 27. [TraceDataAnalysis](http://www.jianshu.com/p/3a977ec4a17c)
 28. [PutSortReducer](http://blog.jrwang.me/2016/gc-overhead-limit-in-putsortreducer/)
 
